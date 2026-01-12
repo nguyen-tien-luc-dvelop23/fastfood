@@ -101,4 +101,55 @@
     window.addEventListener('click', function(e){ const lm=document.getElementById('loginModal'); const rm=document.getElementById('registerModal'); if (e.target===lm) closeLoginModal(); if (e.target===rm) closeRegisterModal(); });
   });
 
+  // Merchant QR helpers
+  if (typeof setMerchantQR === 'undefined') {
+    window.setMerchantQR = function(src){
+      if (!src) return false;
+      localStorage.setItem('merchantQR', src);
+      // update any visible qr images
+      const imgs = document.querySelectorAll('#qrImage, #merchant-qr-img');
+      imgs.forEach(i=> i.src = src);
+      return true;
+    };
+  }
+
+  if (typeof getMerchantQR === 'undefined') {
+    window.getMerchantQR = function(){
+      return localStorage.getItem('merchantQR') || 'images/qr-thanh-toan.png';
+    };
+  }
+
+  if (typeof openMerchantQR === 'undefined') {
+    // Open a lightweight QR modal used by multiple pages. Emits 'merchant-qr-paid' event when confirmed.
+    window.openMerchantQR = function(total, note){
+      let modal = document.getElementById('merchantQRModal');
+      if (!modal){
+        modal = document.createElement('div'); modal.id = 'merchantQRModal';
+        modal.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);display:none;z-index:2000;';
+        modal.innerHTML = `
+          <div style="max-width:460px;margin:6% auto;background:#fff;padding:18px;border-radius:10px;text-align:center;">
+            <h3 style="color:#ff6b81;margin-bottom:8px;">📱 Quét mã QR để thanh toán</h3>
+            <img id="merchant-qr-img" src="${getMerchantQR()}" alt="QR" style="width:220px;height:220px;margin:8px;border-radius:6px;object-fit:cover;">
+            <p style="margin:6px 0;">Số tiền: <strong id="merchant-qr-amount">0 ₫</strong></p>
+            <p style="color:#666;font-size:0.95rem;margin-bottom:12px;">${note || ''}</p>
+            <div style="display:flex;gap:8px;">
+              <button id="merchantConfirmBtn" style="flex:1;padding:10px;border-radius:6px;border:none;background:linear-gradient(90deg,#ff6b81,#ff5c6a);color:#fff;font-weight:700;">✅ Tôi đã thanh toán</button>
+              <button id="merchantCloseBtn" style="flex:1;padding:10px;border-radius:6px;border:none;background:#ddd;color:#333;">❌ Đóng</button>
+            </div>
+          </div>`;
+        document.body.appendChild(modal);
+
+        modal.querySelector('#merchantCloseBtn').addEventListener('click', function(){ modal.style.display = 'none'; });
+        modal.querySelector('#merchantConfirmBtn').addEventListener('click', function(){
+          modal.style.display = 'none';
+          document.dispatchEvent(new CustomEvent('merchant-qr-paid'));
+        });
+      }
+      // update content
+      const img = modal.querySelector('#merchant-qr-img'); if (img) img.src = getMerchantQR();
+      const amount = modal.querySelector('#merchant-qr-amount'); if (amount) amount.textContent = (total||0).toLocaleString('vi-VN') + ' ₫';
+      modal.style.display = 'block';
+    };
+  }
+
 })();
