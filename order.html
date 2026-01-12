@@ -5,11 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Đặt Hàng - ThanhF 1</title>
 <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* Order page styles */
+        .order { padding: 40px 0; background: #f7f8fb; }
+        .order-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items:start; }
+        .cart-card, .summary-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 8px 20px rgba(12,13,14,0.06); }
+        .cart-card h2, .summary-card h2 { margin-top: 0; }
+        .order-table { width:100%; border-collapse: collapse; }
+        .order-table th, .order-table td { padding: 12px; text-align: left; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+        .order-table img { border-radius:8px; width:64px; height:auto; }
+        .order-table input[type=number] { width:60px; padding:6px; border-radius:6px; border:1px solid #e6e6e6; }
+        .summary { font-size: 15px; color:#333; }
+        .summary p { margin: 8px 0; }
+        .checkout-form input[type=text], .checkout-form input[type=tel], .checkout-form input[type=email], .checkout-form textarea { width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e6e6; margin:8px 0; box-sizing:border-box; }
+        .btn-primary { background: linear-gradient(90deg,#ff6b81,#ff5c6a); color: #fff; padding: 10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+        .btn-secondary { background:#fff; color:#ff6b81; border:1px solid #ff6b81; padding:10px 14px; border-radius:8px; cursor:pointer; }
+        #empty-cart { padding: 30px 10px; }
+        /* QR modal polished */
+        #qrModal .modal-card { background: #fff; border-radius:12px; padding:22px; max-width:420px; margin:7% auto; box-shadow:0 12px 30px rgba(10,10,10,0.12); }
+        /* Notifications (shared style) */
+        @keyframes slideInTop { from { transform: translateY(-18px); opacity:0 } to { transform: translateY(0); opacity:1 } }
+        .notification { position: fixed; top:20px; right:20px; background:#fff; padding:14px 18px; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,0.08); z-index:99999; animation:slideInTop .35s ease; }
+        .notification.success { border-left:4px solid #27ae60; background:#f0f9f6; color:#1b7d46 }
+        .notification.error { border-left:4px solid #e74c3c; background:#fff5f4; color:#a02b2b }
+        .notification.warning { border-left:4px solid #f39c12; background:#fffbf0; color:#9a6706 }
+        .notification.info { border-left:4px solid #3498db; background:#f0f7fc; color:#27698e }
+        /* Responsive */
+        @media (max-width:900px) { .order-grid { grid-template-columns:1fr; } .summary-card { order: 2; } }
+    </style>
 </head>
 
 
 <body>
-<div id="toast" class="toast"></div>
 <!-- NAVBAR -->
 <section class="navbar">
   <div class="container">
@@ -33,108 +61,85 @@
 
 <section class="order">
 <div class="container">
+  <div class="order-grid">
+    <div class="cart-card">
+      <h2>📋 Món đã chọn</h2>
+      <div class="cart-inner">
+        <table class="order-table">
+          <thead>
+            <tr>
+              <th>Ảnh</th><th>Tên</th><th>Giá</th><th>SL</th><th>Tiền</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="cart-items"></tbody>
+        </table>
 
-<h2>📋 Món đã chọn</h2>
+        <div id="empty-cart" style="display:none;text-align:center;margin:30px">
+          <h3>🛑 Giỏ hàng trống</h3>
+          <a href="foods.html" class="btn btn-primary">Quay lại chọn món</a>
+        </div>
+      </div>
+    </div>
 
-<table class="order-table">
-<thead>
-<tr>
-<th>Ảnh</th><th>Tên</th><th>Giá</th><th>SL</th><th>Tiền</th><th></th>
-</tr>
-</thead>
-<tbody id="cart-items"></tbody>
-</table>
+    <aside class="summary-card">
+      <h2>🧾 Tóm tắt & Thanh toán</h2>
+      <div class="summary">
+        <p>Tạm tính: <strong id="subtotal">0 ₫</strong></p>
+        <p>Phí giao hàng: <strong id="ship">0 ₫</strong></p>
+        <hr>
+        <p style="font-size:1.2rem">Tổng: <strong id="total" style="color:#ff6b81;font-size:1.2rem">0 ₫</strong></p>
+      </div>
 
-<div id="empty-cart" style="display:none;text-align:center;margin:30px">
-  <h3>🛑 Giỏ hàng trống</h3>
-  <a href="foods.html" class="btn btn-primary">Quay lại chọn món</a>
-</div>
+      <form id="orderForm" class="checkout-form">
+        <input id="orderName" type="text" placeholder="👤 Họ và tên" required>
+        <input id="orderPhone" type="tel" placeholder="📱 Số điện thoại" required>
+        <input id="orderEmail" type="email" placeholder="📧 Email" required>
+        <textarea id="orderAddress" placeholder="🏠 Địa chỉ giao hàng" required></textarea>
+        <textarea id="orderNote" placeholder="💬 Ghi chú (tuỳ chọn)"></textarea>
 
-<div style="margin-top:20px">
-  <p>Tạm tính: <strong id="subtotal">0 ₫</strong></p>
-  <p>Phí giao hàng: <strong id="ship">0 ₫</strong></p>
-  <hr>
-  <p style="font-size:1.3rem">
-    Tổng cộng: <strong id="total" style="color:#ff6b81">0 ₫</strong>
-  </p>
-</div>
+        <h4 style="margin-top:6px">💳 Hình thức thanh toán</h4>
+        <label style="display:block;margin:6px 0"><input type="radio" name="payment" value="cash" checked> 💵 Thanh toán tiền mặt</label>
+        <label style="display:block;margin:6px 0"><input type="radio" name="payment" value="qr"> 📱 Thanh toán QR</label>
 
-<hr>
-
-<h2>📝 Thông Tin Giao Hàng</h2>
-
-<form id="orderForm">
-<input type="text" placeholder="👤 Họ và tên" required>
-<input type="tel" placeholder="📱 Số điện thoại" required>
-<input type="email" placeholder="📧 Email" required>
-<textarea placeholder="🏠 Địa chỉ giao hàng" required></textarea>
-<textarea placeholder="💬 Ghi chú (tuỳ chọn)"></textarea>
-
-<h3>💳 Hình thức thanh toán</h3>
-
-<label>
-  <input type="radio" name="payment" value="cash" checked>
-  💵 Thanh toán tiền mặt
-</label><br>
-
-<label>
-  <input type="radio" name="payment" value="qr">
-  📱 Thanh toán QR
-</label>
-
-<button type="submit" class="btn btn-primary" style="width:100%;margin-top:20px">
-✅ Xác nhận đặt hàng
-</button>
-</form>
-
+        <button type="submit" class="btn btn-primary" style="width:100%;margin-top:10px">✅ Xác nhận đặt hàng</button>
+      </form>
+    </aside>
+  </div>
 </div>
 </section>
 
 <!-- QR MODAL -->
-<div id="qrModal" style="
-display:none;
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:rgba(0,0,0,.6);
-z-index:9999;
-">
+<div id="qrModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:9999;">
+  <div class="modal-card" style="max-width:520px;margin:6% auto;">
+    <h3 style="margin-top:0">Quét QR để thanh toán</h3>
+    <img src="images/qr-thanh-toan.png" style="width:260px;border-radius:12px;margin:10px 0">
 
-<div style="
-background:#ffeef5;
-max-width:420px;
-margin:8% auto;
-border-radius:20px;
-padding:20px;
-text-align:center;
-">
+    <p>💰 Số tiền cần thanh toán</p>
+    <p id="qrMoney" style="font-size:1.6rem;color:#ff6b81;font-weight:bold">0 ₫</p>
 
-<h3>Quét QR để thanh toán</h3>
+    <p style="margin-top:10px;font-size:1rem">📌 <strong>Nội dung chuyển khoản:</strong><br><span id="qrNote" style="color:#333;font-weight:bold"></span></p>
 
-<img src="images/qr-thanh-toan.png"
-style="width:260px;border-radius:12px;margin:10px 0">
-
-<p>💰 Số tiền cần thanh toán</p>
-<p id="qrMoney" style="font-size:1.6rem;color:#ff6b81;font-weight:bold">0 ₫</p>
-
-<p style="margin-top:10px;font-size:1rem">
-📌 <strong>Nội dung chuyển khoản:</strong><br>
-<span id="qrNote" style="color:#333;font-weight:bold"></span>
-</p>
-
-<button onclick="confirmPaid()" class="btn btn-primary" style="width:100%">
-✅ Tôi đã thanh toán
-</button>
-
-<button onclick="closeQR()" style="margin-top:10px;width:100%;padding:10px">
-❌ Đóng
-</button>
-
-</div>
+    <button onclick="confirmPaid()" class="btn btn-primary" style="width:100%">✅ Tôi đã thanh toán</button>
+    <button onclick="closeQR()" class="btn btn-secondary" style="margin-top:8px;width:100%">❌ Đóng</button>
+  </div>
 </div>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+// Show Notification (shared util)
+function showNotification(message, type = 'info') {
+  const el = document.createElement('div');
+  el.className = 'notification ' + type;
+  el.textContent = message;
+  document.body.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(-10px)';
+    el.style.transition = 'all .3s ease';
+    setTimeout(() => el.remove(), 300);
+  }, 3200);
+}
 
 /* ===== RANDOM NỘI DUNG 30 PHÚT ===== */
 function getQRNote() {
@@ -206,13 +211,13 @@ document.getElementById("orderForm").addEventListener("submit", e => {
 
   // 🚨 BẮT BUỘC ĐĂNG NHẬP
   if (!isUserLoggedIn()) {
-    alert("⚠️ Vui lòng đăng nhập để đặt hàng!");
-    window.location.href = "foods.html"; // hoặc login.html nếu có
+    showNotification('⚠️ Vui lòng đăng nhập để đặt hàng!', 'warning');
+    setTimeout(()=> window.location.href = "foods.html", 900);
     return;
   }
 
   if (cart.length === 0) {
-    alert("❌ Giỏ hàng trống");
+    showNotification('❌ Giỏ hàng trống', 'error');
     return;
   }
 
@@ -238,17 +243,8 @@ function openQR(){
 function closeQR(){ document.getElementById("qrModal").style.display="none"; }
 
 function confirmPaid(){
-  alert("✅ Đã ghi nhận thanh toán QR!");
-  finishOrder();
-}
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.innerHTML = "🔒 " + message;
-  toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
+  showNotification('✅ Đã ghi nhận thanh toán QR!', 'success');
+  setTimeout(finishOrder, 800);
 }
 
 function finishOrder(){
