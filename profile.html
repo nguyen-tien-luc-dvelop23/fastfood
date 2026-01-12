@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Người Dùng - ThanhF 1</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .profile-container {
+            max-width: 1000px;
+            margin: 3% auto;
+            display: grid;
+            grid-template-columns: 25% 75%;
+            gap: 2%;
+        }
+
+        .profile-sidebar {
+            background: white;
+            padding: 2%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-avatar-large {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff6b81, #ff5c6a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            margin: 0 auto 1% auto;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.3);
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2f3542;
+            margin-bottom: 0.5%;
+        }
+
+        .profile-email {
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-bottom: 2%;
+            word-break: break-all;
+        }
+
+        .profile-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1% 0;
+            border-bottom: 1px solid #dfe6e9;
+        }
+
+        .profile-stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            color: #ff6b81;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .profile-main {
+            background: white;
+            padding: 2%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-tabs {
+            display: flex;
+            gap: 2%;
+            border-bottom: 2px solid #dfe6e9;
+            margin-bottom: 2%;
+        }
+
+        .tab-btn {
+            padding: 1% 2%;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #636e72;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: #ff6b81;
+            border-bottom-color: #ff6b81;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2%;
+            margin-bottom: 2%;
+        }
+
+        .info-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-label {
+            color: #636e72;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5%;
+        }
+
+        .field-value {
+            color: #2f3542;
+            font-size: 1rem;
+            padding: 1% 1.5%;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .field-edit {
+            color: #2f3542;
+            font-size: 1rem;
+            padding: 1% 1.5%;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .field-edit:focus {
+            outline: none;
+            border-color: #ff6b81;
+            box-shadow: 0 0 10px rgba(255, 107, 129, 0.2);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1%;
+            margin-top: 2%;
+        }
+
+        .order-item {
+            background: #f8f9fa;
+            padding: 2%;
+            border-radius: 10px;
+            margin-bottom: 2%;
+            border-left: 4px solid #ff6b81;
+        }
+
+        .order-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2%;
+            margin-bottom: 1.5%;
+            padding-bottom: 1.5%;
+            border-bottom: 1px solid #dfe6e9;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: #2f3542;
+        }
+
+        .order-date {
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 0.5% 1%;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .order-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .order-status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .order-items-list {
+            margin-bottom: 1%;
+        }
+
+        .order-item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 2%;
+            padding: 0.8% 0;
+            border-bottom: 1px solid #e3e6e9;
+            font-size: 0.9rem;
+        }
+
+        .order-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-total {
+            text-align: right;
+            padding-top: 1%;
+            border-top: 2px solid #ff6b81;
+            font-weight: 700;
+            color: #ff6b81;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3%;
+            color: #636e72;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1%;
+        }
+
+        @media screen and (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                position: relative;
+                top: 0;
+            }
+
+            .info-row {
+                grid-template-columns: 1fr;
+            }
+
+            .order-header {
+                grid-template-columns: 1fr;
+            }
+
+            .order-item-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<section class="navbar">
+    <div class="container">
+        <div class="logo">
+            <a href="index.html" title="ThanhF 1">
+                <img src="images/logo.png" class="img-responsive">
+            </a>
+        </div>
+
+        <div class="menu text-right">
+            <ul>
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="categories.html">Danh Mục</a></li>
+                <li><a href="foods.html">Thực Đơn</a></li>
+                <li><a href="order.html">Đặt Hàng</a></li>
+                <li id="profile-menu-link">
+                    <a href="profile.html" style="font-weight: 700; color: #ff6b81;">👤 Hồ Sơ</a>
+                </li>
+                <li id="logout-menu">
+                    <a href="#" onclick="logout(); return false;" style="color: #ff6b81; font-weight: 500;">🚪 Đăng Xuất</a>
+                </li>
+                <li id="auth-menu-profile">
+                    <a href="index.html" onclick="openLoginModal(); return false;" class="btn btn-primary" style="padding: 8px 15px; margin: 0 5px;">🔐 Đăng Nhập</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</section>
+
+<!-- Hero Section -->
+<section class="food-search text-center" style="padding: 2% 0; background: linear-gradient(135deg, #ff6b81 0%, #ff5c6a 100%); color: white;">
+    <div class="container">
+        <h1 style="font-size: 1.8rem; margin-bottom: 0;">👤 Hồ Sơ Cá Nhân</h1>
+    </div>
+</section>
+
+<!-- Profile Container -->
+<section class="container">
+    <div class="profile-container">
+        <!-- Sidebar -->
+        <div class="profile-sidebar" id="sidebar-profile">
+            <div class="profile-info">
+                <div class="profile-avatar-large" id="profile-avatar-large">👤</div>
+                <div class="profile-name" id="profile-name">Vui Lòng Đăng Nhập</div>
+                <div class="profile-email" id="profile-email">Đăng nhập để xem thông tin</div>
+            </div>
+
+            <div style="margin-top: 2%; padding-top: 2%; border-top: 1px solid #dfe6e9;">
+                <div class="profile-stat">
+                    <span class="stat-label">📦 Tổng Đơn Hàng</span>
+                    <span class="stat-value" id="total-orders">0</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="stat-label">💰 Tổng Chi Tiêu</span>
+                    <span class="stat-value" id="total-spent">0 ₫</span>
+                </div>
+                <div class="profile-stat">
+                    <span class="stat-label">📅 Thành Viên Từ</span>
+                    <span class="stat-value" id="member-since" style="font-size: 0.9rem;">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="profile-main" id="main-profile">
+            <div class="profile-tabs">
+                <button class="tab-btn active" onclick="switchTab('info')">ℹ️ Thông Tin</button>
+                <button class="tab-btn" onclick="switchTab('orders')">📦 Lịch Sử Đặt Hàng</button>
+                <button class="tab-btn" onclick="switchTab('settings')">⚙️ Cài Đặt</button>
+            </div>
+
+            <!-- Info Tab -->
+            <div id="info" class="tab-content active">
+                <div id="info-view">
+                    <div class="info-row">
+                        <div class="info-field">
+                            <label class="field-label">👤 Họ Tên</label>
+                            <div class="field-value" id="info-name">-</div>
+                        </div>
+                        <div class="info-field">
+                            <label class="field-label">📧 Email</label>
+                            <div class="field-value" id="info-email">-</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-field">
+                            <label class="field-label">📱 Số Điện Thoại</label>
+                            <div class="field-value" id="info-phone">-</div>
+                        </div>
+                        <div class="info-field">
+                            <label class="field-label">🏠 Địa Chỉ</label>
+                            <div class="field-value" id="info-address">-</div>
+                        </div>
+                    </div>
+
+                    <div class="info-row" style="grid-template-columns: 1fr;">
+                        <div class="info-field">
+                            <label class="field-label">📝 Ghi Chú</label>
+                            <div class="field-value" id="info-notes" style="min-height: 80px; white-space: pre-wrap;">-</div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="editProfile()">✏️ Chỉnh Sửa Thông Tin</button>
+                    </div>
+                </div>
+
+                <div id="info-edit" style="display: none;">
+                    <div class="info-row">
+                        <div class="info-field">
+                            <label class="field-label">👤 Họ Tên</label>
+                            <input type="text" class="field-edit" id="edit-name">
+                        </div>
+                        <div class="info-field">
+                            <label class="field-label">📱 Số Điện Thoại</label>
+                            <input type="tel" class="field-edit" id="edit-phone">
+                        </div>
+                    </div>
+
+                    <div class="info-row" style="grid-template-columns: 1fr;">
+                        <div class="info-field">
+                            <label class="field-label">🏠 Địa Chỉ</label>
+                            <input type="text" class="field-edit" id="edit-address">
+                        </div>
+                    </div>
+
+                    <div class="info-row" style="grid-template-columns: 1fr;">
+                        <div class="info-field">
+                            <label class="field-label">📝 Ghi Chú</label>
+                            <textarea class="field-edit" id="edit-notes" style="resize: vertical; min-height: 80px;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="saveProfile()">💾 Lưu Thay Đổi</button>
+                        <button class="btn" style="background: #dfe6e9; color: #2f3542;" onclick="cancelEdit()">❌ Hủy</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders" class="tab-content">
+                <div id="orders-list"></div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <div class="info-row" style="grid-template-columns: 1fr;">
+                    <div class="info-field">
+                        <label class="field-label">🔑 Đổi Mật Khẩu</label>
+                        <input type="password" class="field-edit" id="old-password" placeholder="Mật khẩu cũ">
+                        <input type="password" class="field-edit" id="new-password" placeholder="Mật khẩu mới" style="margin-top: 1%;">
+                        <input type="password" class="field-edit" id="confirm-password" placeholder="Xác nhận mật khẩu" style="margin-top: 1%;">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="changePassword()">💾 Cập Nhật Mật Khẩu</button>
+                </div>
+
+                <hr style="margin: 3% 0; border: 1px solid #dfe6e9;">
+
+                <div style="padding: 2%; background: #fff3cd; border-radius: 10px; border-left: 4px solid #ffc107; margin-bottom: 2%;">
+                    <h4 style="color: #856404; margin-bottom: 1%;">⚠️ Vùng Nguy Hiểm</h4>
+                    <p style="color: #856404; margin-bottom: 1.5%;">Thao tác này không thể hoàn tác!</p>
+                    <button class="btn" style="background: #ff6b81; color: white;" onclick="deleteAccount()">🗑️ Xóa Tài Khoản</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="not-logged-in" style="text-align: center; padding: 5%; display: none;">
+        <h2 style="color: #ff6b81; margin-bottom: 2%;">🔐 Vui Lòng Đăng Nhập</h2>
+        <p style="font-size: 1.1rem; margin-bottom: 2%;">Bạn cần đăng nhập để xem hồ sơ cá nhân</p>
+        <a href="index.html" onclick="openLoginModal(); return false;" class="btn btn-primary">Đăng Nhập Ngay</a>
+    </div>
+</section>
+
+<!-- Social -->
+<section class="social">
+    <div class="container text-center">
+        <h2 style="color: white;">📱 Kết Nối Với Chúng Tôi</h2>
+        <ul>
+            <li>
+                <a href="https://facebook.com" target="_blank" title="Facebook"><img src="https://img.icons8.com/fluent/50/000000/facebook-new.png" alt="Facebook"/></a>
+            </li>
+            <li>
+                <a href="https://instagram.com" target="_blank" title="Instagram"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"/></a>
+            </li>
+            <li>
+                <a href="https://twitter.com" target="_blank" title="Twitter"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"/></a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<script>
+let currentUser = null;
+let isEditing = false;
+
+function checkLogin() {
+    currentUser = JSON.parse(localStorage.getItem('user'));
+    
+    let sidebar = document.getElementById('sidebar-profile');
+    let mainProfile = document.getElementById('main-profile');
+    let notLoggedIn = document.getElementById('not-logged-in');
+    let profileMenuLink = document.getElementById('profile-menu-link');
+    let logoutMenu = document.getElementById('logout-menu');
+    let authMenu = document.getElementById('auth-menu-profile');
+    
+    if (!currentUser || !currentUser.loggedIn) {
+        sidebar.style.display = 'none';
+        mainProfile.style.display = 'none';
+        notLoggedIn.style.display = 'block';
+        profileMenuLink.style.display = 'none';
+        logoutMenu.style.display = 'none';
+        authMenu.style.display = 'inline-block';
+    } else {
+        sidebar.style.display = 'block';
+        mainProfile.style.display = 'block';
+        notLoggedIn.style.display = 'none';
+        profileMenuLink.style.display = 'inline-block';
+        logoutMenu.style.display = 'inline-block';
+        authMenu.style.display = 'none';
+        loadProfileData();
+    }
+}
+
+function loadProfileData() {
+    // Load user basic info
+    document.getElementById('profile-avatar-large').textContent = currentUser.name.charAt(0).toUpperCase();
+    document.getElementById('profile-name').textContent = currentUser.name;
+    document.getElementById('profile-email').textContent = currentUser.email;
+    
+    // Load detailed info
+    let userDetail = JSON.parse(localStorage.getItem('userDetail_' + currentUser.email)) || {};
+    
+    document.getElementById('info-name').textContent = currentUser.name;
+    document.getElementById('info-email').textContent = currentUser.email;
+    document.getElementById('info-phone').textContent = userDetail.phone || currentUser.phone || '-';
+    document.getElementById('info-address').textContent = userDetail.address || '-';
+    document.getElementById('info-notes').textContent = userDetail.notes || '-';
+    
+    // Load order stats
+    loadOrderStats();
+    
+    // Load orders
+    loadOrders();
+}
+
+function loadOrderStats() {
+    let orders = JSON.parse(localStorage.getItem('userOrders_' + currentUser.email)) || [];
+    
+    let totalOrders = orders.length;
+    let totalSpent = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+    let joinDate = JSON.parse(localStorage.getItem('userDetail_' + currentUser.email)) || {};
+    
+    document.getElementById('total-orders').textContent = totalOrders;
+    document.getElementById('total-spent').textContent = totalSpent.toLocaleString('vi-VN') + ' ₫';
+    document.getElementById('member-since').textContent = joinDate.joinDate || new Date().toLocaleDateString('vi-VN');
+}
+
+function loadOrders() {
+    let orders = JSON.parse(localStorage.getItem('userOrders_' + currentUser.email)) || [];
+    let ordersList = document.getElementById('orders-list');
+    
+    if (orders.length === 0) {
+        ordersList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📦</div>
+                <h3>Chưa có đơn hàng</h3>
+                <p>Bạn chưa tạo bất kỳ đơn hàng nào</p>
+                <a href="foods.html" class="btn btn-primary" style="margin-top: 1%;">Đặt Hàng Ngay</a>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    orders.forEach((order, index) => {
+        let status = order.status === 'completed' ? 'Hoàn Thành' : 'Đang Xử Lý';
+        let statusClass = order.status === 'completed' ? 'completed' : 'pending';
+        
+        let items = '';
+        if (order.items && order.items.length > 0) {
+            order.items.forEach(item => {
+                items += `
+                    <div class="order-item-row">
+                        <span>${item.name}</span>
+                        <span>x${item.quantity}</span>
+                        <span>${(item.price * item.quantity).toLocaleString('vi-VN')} ₫</span>
+                    </div>
+                `;
+            });
+        }
+        
+        html += `
+            <div class="order-item">
+                <div class="order-header">
+                    <div>
+                        <div class="order-id">Đơn #${order.id || index + 1}</div>
+                    </div>
+                    <div>
+                        <div class="order-date">📅 ${new Date(order.date).toLocaleDateString('vi-VN')}</div>
+                    </div>
+                    <div>
+                        <span class="order-status ${statusClass}">${status}</span>
+                    </div>
+                </div>
+                
+                <div class="order-items-list">
+                    ${items}
+                </div>
+                
+                <div class="order-total">
+                    Tổng: ${order.total.toLocaleString('vi-VN')} ₫
+                </div>
+            </div>
+        `;
+    });
+    
+    ordersList.innerHTML = html;
+}
+
+function switchTab(tabName) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active to selected
+    document.getElementById(tabName).classList.add('active');
+    event.target.classList.add('active');
+}
+
+function editProfile() {
+    isEditing = true;
+    
+    // Fill edit fields
+    document.getElementById('edit-name').value = document.getElementById('info-name').textContent;
+    document.getElementById('edit-phone').value = document.getElementById('info-phone').textContent === '-' ? '' : document.getElementById('info-phone').textContent;
+    document.getElementById('edit-address').value = document.getElementById('info-address').textContent === '-' ? '' : document.getElementById('info-address').textContent;
+    document.getElementById('edit-notes').value = document.getElementById('info-notes').textContent === '-' ? '' : document.getElementById('info-notes').textContent;
+    
+    document.getElementById('info-view').style.display = 'none';
+    document.getElementById('info-edit').style.display = 'block';
+}
+
+function saveProfile() {
+    let name = document.getElementById('edit-name').value;
+    let phone = document.getElementById('edit-phone').value;
+    let address = document.getElementById('edit-address').value;
+    let notes = document.getElementById('edit-notes').value;
+    
+    if (!name || !phone || !address) {
+        alert('⚠️ Vui lòng điền đầy đủ thông tin!');
+        return;
+    }
+    
+    // Save to localStorage
+    let userDetail = {
+        phone: phone,
+        address: address,
+        notes: notes,
+        joinDate: JSON.parse(localStorage.getItem('userDetail_' + currentUser.email))?.joinDate || new Date().toLocaleDateString('vi-VN'),
+        updated: new Date().toLocaleString('vi-VN')
+    };
+    
+    localStorage.setItem('userDetail_' + currentUser.email, JSON.stringify(userDetail));
+    
+    // Update display
+    document.getElementById('info-name').textContent = name;
+    document.getElementById('info-phone').textContent = phone;
+    document.getElementById('info-address').textContent = address;
+    document.getElementById('info-notes').textContent = notes;
+    
+    cancelEdit();
+    alert('✅ Thông tin đã được cập nhật!');
+}
+
+function cancelEdit() {
+    document.getElementById('info-view').style.display = 'block';
+    document.getElementById('info-edit').style.display = 'none';
+    isEditing = false;
+}
+
+function changePassword() {
+    let oldPassword = document.getElementById('old-password').value;
+    let newPassword = document.getElementById('new-password').value;
+    let confirmPassword = document.getElementById('confirm-password').value;
+    
+    if (!oldPassword || !newPassword || !confirmPassword) {
+        alert('⚠️ Vui lòng điền đầy đủ thông tin!');
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        alert('❌ Mật khẩu mới không khớp!');
+        return;
+    }
+    
+    // Get current account
+    let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+    let account = accounts.find(acc => acc.email === currentUser.email);
+    
+    if (!account || account.password !== oldPassword) {
+        alert('❌ Mật khẩu cũ không đúng!');
+        return;
+    }
+    
+    // Update password
+    account.password = newPassword;
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    
+    // Clear fields
+    document.getElementById('old-password').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+    
+    alert('✅ Mật khẩu đã được cập nhật!');
+}
+
+function deleteAccount() {
+    if (!confirm('⚠️ Bạn chắc chắn muốn xóa tài khoản? Hành động này không thể hoàn tác!')) {
+        return;
+    }
+    
+    if (!confirm('⚠️ Xác nhận lần cuối - xóa tài khoản?')) {
+        return;
+    }
+    
+    // Remove account
+    let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+    accounts = accounts.filter(acc => acc.email !== currentUser.email);
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    
+    // Remove user data
+    localStorage.removeItem('user');
+    localStorage.removeItem('userDetail_' + currentUser.email);
+    localStorage.removeItem('userOrders_' + currentUser.email);
+    
+    alert('✅ Tài khoản đã bị xóa!');
+    window.location.href = 'index.html';
+}
+
+function logout() {
+    localStorage.removeItem('user');
+    alert('✅ Đã đăng xuất!');
+    window.location.href = 'index.html';
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    checkLogin();
+});
+</script>
+
+</body>
+</html>

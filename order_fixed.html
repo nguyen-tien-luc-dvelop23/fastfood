@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng & Đặt Hàng - ThanhF 1</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<section class="navbar">
+    <div class="container">
+        <div class="logo">
+            <a href="index.html" title="ThanhF 1">
+                <img src="images/logo.png" class="img-responsive">
+            </a>
+        </div>
+
+        <div class="menu text-right">
+            <ul>
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="categories.html">Danh Mục</a></li>
+                <li><a href="foods.html">Thực Đơn</a></li>
+                <li><a href="order.html">Đặt Hàng</a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</section>
+
+<!-- Hero Section -->
+<section class="food-search text-center" style="padding: 3% 0; background: linear-gradient(135deg, #ff6b81 0%, #ff5c6a 100%); color: white;">
+    <div class="container">
+        <h1 style="font-size: 2rem; margin-bottom: 1%;">🛒 Giỏ Hàng</h1>
+        <p style="font-size: 1rem;">Kiểm tra và hoàn tất đơn hàng của bạn</p>
+    </div>
+</section>
+
+<section class="order">
+    <div class="container">
+        <div class="order-heading">
+            <h2>📋 Thông Tin Đơn Hàng</h2>
+        </div>
+
+        <div class="order-content">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>🖼️ Hình Ảnh</th>
+                        <th>📌 Tên Món</th>
+                        <th>💰 Giá</th>
+                        <th>📦 Số Lượng</th>
+                        <th>💵 Tổng Tiền</th>
+                        <th>⚙️</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-items">
+                </tbody>
+            </table>
+
+            <div id="empty-cart" style="text-align: center; padding: 3% 0; display: none;">
+                <h2 style="color: #ff6b81; margin-bottom: 2%;">🛒 Giỏ Hàng Trống</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 2%;">Vui lòng chọn các món ăn từ thực đơn</p>
+                <a href="foods.html" class="btn btn-primary">Quay Lại Thực Đơn</a>
+            </div>
+
+            <div id="order-summary" style="margin-top: 3%;">
+                <div class="order-summary-item">
+                    <span>Tổng Tiền Hàng:</span>
+                    <span id="subtotal">0 ₫</span>
+                </div>
+                <div class="order-summary-item">
+                    <span>Phí Giao Hàng:</span>
+                    <span id="delivery">0 ₫</span>
+                </div>
+                <div class="order-summary-item" style="border-top: 2px solid #ff6b81; padding-top: 2%; margin-top: 2%;">
+                    <span style="font-weight: bold; font-size: 1.2rem;">Tổng Cộng:</span>
+                    <span id="total" style="font-weight: bold; color: #ff6b81; font-size: 1.2rem;">0 ₫</span>
+                </div>
+            </div>
+        </div>
+
+        <hr style="margin: 3% 0;">
+
+        <div class="order-form">
+            <h2>📝 Thông Tin Giao Hàng</h2>
+            <form id="orderForm" method="POST" action="order-success.html">
+                <fieldset>
+                    <legend>Thông Tin Khách Hàng</legend>
+                    <div class="order-form-row">
+                        <div class="order-form-col">
+                            <input type="text" name="customer_name" placeholder="👤 Họ Tên" required>
+                        </div>
+                        <div class="order-form-col">
+                            <input type="email" name="customer_email" placeholder="📧 Email" required>
+                        </div>
+                    </div>
+
+                    <div class="order-form-row">
+                        <div class="order-form-col">
+                            <input type="tel" name="customer_phone" placeholder="📱 Số Điện Thoại" required>
+                        </div>
+                        <div class="order-form-col">
+                            <input type="text" name="customer_address" placeholder="🏠 Địa Chỉ" required>
+                        </div>
+                    </div>
+
+                    <div class="order-form-row">
+                        <textarea name="order_notes" placeholder="💬 Ghi Chú Đơn Hàng (Tuỳ Chọn)" rows="4" style="width: 100%;"></textarea>
+                    </div>
+                </fieldset>
+
+                <fieldset style="margin-top: 2%;">
+                    <legend>Hình Thức Thanh Toán</legend>
+                    <div class="order-form-row">
+                        <label style="margin-right: 3%;">
+                            <input type="radio" name="payment_method" value="cash" checked required onchange="togglePaymentMethod()">
+                            💵 Thanh Toán Khi Nhận Hàng
+                        </label>
+                        <label>
+                            <input type="radio" name="payment_method" value="card" required onchange="togglePaymentMethod()">
+                            💳 Thanh Toán Qua Thẻ
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- Credit Card Payment Section -->
+                <fieldset style="margin-top: 2%; display: none;" id="card-payment-section">
+                    <legend>💳 Thông Tin Thanh Toán Qua Thẻ</legend>
+                    
+                    <div class="order-form-row">
+                        <div class="order-form-col">
+                            <input type="text" name="card_holder" placeholder="👤 Tên Chủ Thẻ" maxlength="50">
+                        </div>
+                        <div class="order-form-col">
+                            <input type="text" name="card_number" placeholder="💳 Số Thẻ (16 chữ số)" maxlength="16" pattern="[0-9]{16}">
+                        </div>
+                    </div>
+
+                    <div class="order-form-row">
+                        <div class="order-form-col">
+                            <label style="display: block; margin-bottom: 0.5%;">Ngày Hết Hạn (MM/YY)</label>
+                            <input type="text" name="card_expiry" placeholder="MM/YY" maxlength="5" pattern="[0-9]{2}/[0-9]{2}">
+                        </div>
+                        <div class="order-form-col">
+                            <label style="display: block; margin-bottom: 0.5%;">CVV/CVC</label>
+                            <input type="text" name="card_cvv" placeholder="⚠️ CVV (3 chữ số)" maxlength="3" pattern="[0-9]{3}">
+                        </div>
+                    </div>
+
+                    <div class="order-form-row">
+                        <div class="order-form-col">
+                            <label style="display: block; margin-bottom: 0.5%;">Chọn Loại Thẻ</label>
+                            <select name="card_type" style="width: 100%; padding: 1%; border: 1px solid #ddd; border-radius: 3px; font-size: 1rem;">
+                                <option value="">-- Chọn Loại Thẻ --</option>
+                                <option value="visa">🔵 Visa</option>
+                                <option value="mastercard">🔴 Mastercard</option>
+                                <option value="amex">💚 American Express</option>
+                                <option value="domestic">🇻🇳 Thẻ Nội Địa</option>
+                            </select>
+                        </div>
+                        <div class="order-form-col">
+                            <label style="display: block; margin-bottom: 0.5%;">Loại Thẻ</label>
+                            <select name="card_account_type" style="width: 100%; padding: 1%; border: 1px solid #ddd; border-radius: 3px; font-size: 1rem;">
+                                <option value="">-- Chọn Loại --</option>
+                                <option value="debit">💰 Thẻ Ghi Nợ (Debit)</option>
+                                <option value="credit">📊 Thẻ Tín Dụng (Credit)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="order-form-row">
+                        <label style="display: flex; align-items: center;">
+                            <input type="checkbox" name="card_save" style="margin-right: 1%;">
+                            💾 Lưu Thông Tin Thẻ Cho Lần Mua Tiếp Theo
+                        </label>
+                    </div>
+                </fieldset>
+
+                <button type="button" class="btn btn-primary" id="submitOrderBtn" style="margin-top: 2%; width: 100%; padding: 1.5%; font-size: 1.1rem;">✅ Đặt Hàng Ngay</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Payment Confirmation Modal -->
+<div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 1000; overflow-y: auto;">
+    <div style="background: white; width: 90%; max-width: 500px; margin: 5% auto; padding: 3%; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h2 style="text-align: center; color: #ff6b81; margin-bottom: 2%;">💳 Chọn Hình Thức Thanh Toán</h2>
+        
+        <div style="text-align: center; margin-bottom: 3%;">
+            <p style="font-size: 1.1rem; color: #333; margin-bottom: 1%;">Tổng Tiền Cần Thanh Toán:</p>
+            <p style="font-size: 1.8rem; font-weight: bold; color: #ff6b81;" id="modalTotal">0 ₫</p>
+        </div>
+
+        <div style="display: flex; gap: 2%; margin-bottom: 2%;">
+            <button type="button" id="cashPaymentBtn" style="flex: 1; padding: 1.5%; background: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                💵 Tiền Mặt
+            </button>
+            <button type="button" id="cardPaymentBtn" style="flex: 1; padding: 1.5%; background: #2196F3; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                💳 Thanh Toán Qua Thẻ
+            </button>
+        </div>
+
+        <!-- QR Code Section (Hidden by default) -->
+        <div id="qrCodeSection" style="display: none; text-align: center; padding: 2%; background: #f5f5f5; border-radius: 5px; margin-bottom: 2%;">
+            <h3 style="color: #333; margin-bottom: 1%;">📱 Quét Mã QR Để Thanh Toán</h3>
+            <img id="qrImage" src="" alt="QR Code" style="width: 200px; height: 200px; margin: 1% 0;">
+            <p style="color: #666; font-size: 0.9rem; margin-top: 1%;">Số tiền: <span id="qrAmount">0</span> ₫</p>
+            <p style="color: #999; font-size: 0.85rem;">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã QR</p>
+        </div>
+
+        <button type="button" id="closeModalBtn" style="width: 100%; padding: 1%; background: #ddd; color: #333; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+            ❌ Đóng
+        </button>
+    </div>
+</div>
+
+<section class="social">
+    <div class="container text-center">
+        <h2 style="color: white; margin-bottom: 2%;">📱 Theo Dõi ThanhF 1</h2>
+        <ul>
+            <li>
+                <a href="https://facebook.com" target="_blank"><img src="https://img.icons8.com/fluent/50/000000/facebook-new.png" alt="Facebook"/></a>
+            </li>
+            <li>
+                <a href="https://instagram.com" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"/></a>
+            </li>
+            <li>
+                <a href="https://twitter.com" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"/></a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    displayCart();
+    
+    // Handle payment method change
+    const paymentRadios = document.querySelectorAll('input[name="payment_method"]');
+    paymentRadios.forEach(radio => {
+        radio.addEventListener('change', togglePaymentMethod);
+    });
+    
+    // Handle order form submission - Show modal instead of submitting
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
+            alert('❌ Giỏ hàng trống! Vui lòng chọn các món ăn.');
+            return;
+        }
+        
+        // Show payment confirmation modal
+        showPaymentModal();
+    });
+    
+    // Payment Modal Buttons
+    document.getElementById('cashPaymentBtn').addEventListener('click', function() {
+        completeOrder('cash');
+    });
+    
+    document.getElementById('cardPaymentBtn').addEventListener('click', function() {
+        // Check if card details are filled when card payment is selected in form
+        let paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+        
+        if (paymentMethod === 'card') {
+            if (!validateCardPayment()) {
+                return;
+            }
+        }
+        
+        // Show QR code
+        showQRCode();
+    });
+    
+    document.getElementById('closeModalBtn').addEventListener('click', function() {
+        closePaymentModal();
+    });
+    
+    // Close modal when clicking outside
+    document.getElementById('paymentModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closePaymentModal();
+        }
+    });
+});
+
+function showPaymentModal() {
+    const total = calculateTotal();
+    document.getElementById('modalTotal').textContent = total.toLocaleString('vi-VN') + ' ₫';
+    document.getElementById('paymentModal').style.display = 'block';
+    document.getElementById('qrCodeSection').style.display = 'none';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+    document.getElementById('qrCodeSection').style.display = 'none';
+}
+
+function showQRCode() {
+    const total = calculateTotal();
+    const qrCodeSection = document.getElementById('qrCodeSection');
+    const qrImage = document.getElementById('qrImage');
+    const qrAmount = document.getElementById('qrAmount');
+    
+    // Generate QR code using QR Server API
+    // Format: Amount | Reference | Store info
+    const qrData = `THANH TOÁN: ${total} VNĐ\nThanhF 1 Restaurant\nCảm ơn bạn!`;
+    const encodedData = encodeURIComponent(qrData);
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedData}`;
+    
+    qrImage.src = qrUrl;
+    qrAmount.textContent = total.toLocaleString('vi-VN');
+    qrCodeSection.style.display = 'block';
+}
+
+function completeOrder(paymentType) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        alert('❌ Giỏ hàng trống!');
+        return;
+    }
+    
+    let paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    
+    // Validate card payment if needed
+    if (paymentType === 'card' || paymentMethod === 'card') {
+        if (!validateCardPayment()) {
+            return;
+        }
+    }
+    
+    // Get form data
+    let orderData = {
+        customer_name: document.querySelector('input[name="customer_name"]').value,
+        customer_email: document.querySelector('input[name="customer_email"]').value,
+        customer_phone: document.querySelector('input[name="customer_phone"]').value,
+        customer_address: document.querySelector('input[name="customer_address"]').value,
+        order_notes: document.querySelector('textarea[name="order_notes"]').value,
+        payment_method: paymentType === 'card' ? 'card' : 'cash',
+        items: cart,
+        total: calculateTotal(),
+        order_date: new Date().toLocaleString('vi-VN')
+    };
+    
+    // Add card data if using card payment
+    if (paymentType === 'card' || paymentMethod === 'card') {
+        orderData.card_holder = document.querySelector('input[name="card_holder"]').value;
+        orderData.card_type = document.querySelector('select[name="card_type"]').value;
+        orderData.card_account_type = document.querySelector('select[name="card_account_type"]').value;
+        // Only store last 4 digits for security
+        let cardNumber = document.querySelector('input[name="card_number"]').value;
+        orderData.card_last_four = cardNumber.slice(-4);
+    }
+    
+    // Save order
+    localStorage.setItem('lastOrder', JSON.stringify(orderData));
+    
+    // Clear cart and card info
+    localStorage.removeItem('cart');
+    clearCardFields();
+    closePaymentModal();
+    
+    // Redirect to success page
+    alert('✅ Đặt hàng thành công!');
+    window.location.href = 'order-success.html';
+}
+
+function togglePaymentMethod() {
+    const cardPaymentSection = document.getElementById('card-payment-section');
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    
+    if (paymentMethod === 'card') {
+        cardPaymentSection.style.display = 'block';
+        // Make card fields required
+        document.querySelector('input[name="card_holder"]').required = true;
+        document.querySelector('input[name="card_number"]').required = true;
+        document.querySelector('input[name="card_expiry"]').required = true;
+        document.querySelector('input[name="card_cvv"]').required = true;
+        document.querySelector('select[name="card_type"]').required = true;
+        document.querySelector('select[name="card_account_type"]').required = true;
+    } else {
+        cardPaymentSection.style.display = 'none';
+        // Remove required attribute
+        document.querySelector('input[name="card_holder"]').required = false;
+        document.querySelector('input[name="card_number"]').required = false;
+        document.querySelector('input[name="card_expiry"]').required = false;
+        document.querySelector('input[name="card_cvv"]').required = false;
+        document.querySelector('select[name="card_type"]').required = false;
+        document.querySelector('select[name="card_account_type"]').required = false;
+    }
+}
+
+function validateCardPayment() {
+    const cardHolder = document.querySelector('input[name="card_holder"]').value.trim();
+    const cardNumber = document.querySelector('input[name="card_number"]').value.trim();
+    const cardExpiry = document.querySelector('input[name="card_expiry"]').value.trim();
+    const cardCVV = document.querySelector('input[name="card_cvv"]').value.trim();
+    const cardType = document.querySelector('select[name="card_type"]').value;
+    const cardAccountType = document.querySelector('select[name="card_account_type"]').value;
+    
+    // Validate card holder name
+    if (!cardHolder || cardHolder.length < 3) {
+        alert('⚠️ Vui lòng nhập tên chủ thẻ hợp lệ (ít nhất 3 ký tự)');
+        return false;
+    }
+    
+    // Validate card number
+    if (!cardNumber || cardNumber.length !== 16 || !/^\d{16}$/.test(cardNumber)) {
+        alert('⚠️ Số thẻ không hợp lệ! Phải là 16 chữ số');
+        return false;
+    }
+    
+    // Validate card expiry format (MM/YY)
+    if (!cardExpiry || !/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+        alert('⚠️ Định dạng ngày hết hạn không đúng! Vui lòng nhập MM/YY');
+        return false;
+    }
+    
+    // Validate expiry month and year
+    const [month, year] = cardExpiry.split('/');
+    if (parseInt(month) < 1 || parseInt(month) > 12) {
+        alert('⚠️ Tháng không hợp lệ! Nhập từ 01 đến 12');
+        return false;
+    }
+    
+    // Validate CVV
+    if (!cardCVV || cardCVV.length !== 3 || !/^\d{3}$/.test(cardCVV)) {
+        alert('⚠️ CVV không hợp lệ! Phải là 3 chữ số');
+        return false;
+    }
+    
+    // Validate card type and account type
+    if (!cardType) {
+        alert('⚠️ Vui lòng chọn loại thẻ');
+        return false;
+    }
+    
+    if (!cardAccountType) {
+        alert('⚠️ Vui lòng chọn loại tài khoản');
+        return false;
+    }
+    
+    // Simulate card validation (Luhn algorithm for real implementation)
+    if (!luhnCheck(cardNumber)) {
+        alert('⚠️ Số thẻ không hợp lệ!');
+        return false;
+    }
+    
+    return true;
+}
+
+// Luhn algorithm for card number validation
+function luhnCheck(num) {
+    let sum = 0;
+    let isEven = false;
+    
+    for (let i = num.length - 1; i >= 0; i--) {
+        let digit = parseInt(num.charAt(i), 10);
+        
+        if (isEven) {
+            digit *= 2;
+            if (digit > 9) {
+                digit -= 9;
+            }
+        }
+        
+        sum += digit;
+        isEven = !isEven;
+    }
+    
+    return (sum % 10) === 0;
+}
+
+function clearCardFields() {
+    document.querySelector('input[name="card_holder"]').value = '';
+    document.querySelector('input[name="card_number"]').value = '';
+    document.querySelector('input[name="card_expiry"]').value = '';
+    document.querySelector('input[name="card_cvv"]').value = '';
+    document.querySelector('select[name="card_type"]').value = '';
+    document.querySelector('select[name="card_account_type"]').value = '';
+    document.querySelector('input[name="card_save"]').checked = false;
+}
+
+function displayCart() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cartItems = document.getElementById('cart-items');
+    let emptyCart = document.getElementById('empty-cart');
+    let orderSummary = document.getElementById('order-summary');
+    
+    cartItems.innerHTML = '';
+    
+    if (cart.length === 0) {
+        emptyCart.style.display = 'block';
+        orderSummary.style.display = 'none';
+        return;
+    }
+    
+    emptyCart.style.display = 'none';
+    orderSummary.style.display = 'block';
+    
+    let subtotal = 0;
+    
+    cart.forEach((item, index) => {
+        let itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        // Use image from cart or fallback to default
+        let imgSrc = item.image || 'images/menu-pizza.jpg';
+        
+        let row = `
+            <tr>
+                <td class="order-img">
+                    <img src="${imgSrc}" alt="${item.name}" class="img-responsive img-curve" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px;">
+                </td>
+                <td>${item.name}</td>
+                <td>${item.price.toLocaleString('vi-VN')} ₫</td>
+                <td>
+                    <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+                </td>
+                <td style="color: #ff6b81; font-weight: bold;">${itemTotal.toLocaleString('vi-VN')} ₫</td>
+                <td>
+                    <button type="button" onclick="removeFromCart(${index})" class="btn" style="background: #ff6b81; color: white; padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer;">🗑️</button>
+                </td>
+            </tr>
+        `;
+        cartItems.innerHTML += row;
+    });
+    
+    // Calculate totals
+    let delivery = subtotal > 500000 ? 0 : 30000;
+    let total = subtotal + delivery;
+    
+    document.getElementById('subtotal').textContent = subtotal.toLocaleString('vi-VN') + ' ₫';
+    document.getElementById('delivery').textContent = delivery.toLocaleString('vi-VN') + ' ₫';
+    document.getElementById('total').textContent = total.toLocaleString('vi-VN') + ' ₫';
+}
+
+function removeFromCart(index) {
+    if (confirm('❓ Bạn chắc chắn muốn xóa?')) {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+        alert('✅ Đã xóa khỏi giỏ hàng');
+    }
+}
+
+function updateQuantity(index, newQty) {
+    let qty = parseInt(newQty);
+    if (qty < 1) {
+        alert('⚠️ Số lượng phải >= 1');
+        displayCart();
+        return;
+    }
+    
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart[index].quantity = qty;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    displayCart();
+}
+
+function calculateTotal() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    return total + (total > 500000 ? 0 : 30000);
+}
+</script>
+
+</body>
+</html>

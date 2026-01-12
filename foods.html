@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thực Đơn Đầy Đủ - ThanhF 1</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<section class="navbar">
+    <div class="container">
+        <div class="logo">
+            <a href="index.html" title="ThanhF 1">
+                <img src="images/logo.png" class="img-responsive">
+            </a>
+        </div>
+
+        <div class="menu text-right">
+            <ul>
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="categories.html">Danh Mục</a></li>
+                <li><a href="foods.html">Thực Đơn</a></li>
+                <li><a href="order.html">Đặt Hàng</a></li>
+                <li id="profile-menu-foods" style="display:none;">
+                    <a href="profile.html" style="font-weight: 700; color: #ff6b81;">👤 Hồ Sơ</a>
+                    <span style="margin: 0 8px; color: #dfe6e9;">|</span>
+                    <a href="#" onclick="logout(); return false;" style="color: #ff6b81; font-size: 0.9rem; text-decoration: none;">🚪 Đăng Xuất</a>
+                </li>
+                <li id="auth-menu-foods">
+                    <a href="#" class="btn btn-primary" style="padding: 8px 15px; margin: 0 5px;" onclick="openLoginModal(); return false;">🔐 Đăng Nhập</a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</section>
+
+<!-- Hero Section -->
+<section class="food-search text-center" style="padding: 5% 0; background: linear-gradient(135deg, #ff6b81 0%, #ff5c6a 100%); color: white;">
+    <div class="container">
+        <h1 style="font-size: 2.5rem; margin-bottom: 1%;">🍽️ Thực Đơn Đầy Đủ</h1>
+        <p style="font-size: 1.1rem;">Khám phá hơn 20 món ăn ngon tuyệt vời từ khắp nơi</p>
+    </div>
+</section>
+
+<!-- Filter Menu -->
+<section class="food-menu" style="padding: 3% 0; background: white;">
+    <div class="container">
+        <div class="menu-filter" style="text-align: center; margin-bottom: 3%;">
+            <button class="filter-btn active" onclick="filterFood('all')">🍽️ Tất Cả</button>
+            <button class="filter-btn" onclick="filterFood('pizza')">🍕 Pizza</button>
+            <button class="filter-btn" onclick="filterFood('burger')">🍔 Burger</button>
+            <button class="filter-btn" onclick="filterFood('momo')">🥟 Momo</button>
+            <button class="filter-btn" onclick="filterFood('vietnam')">🍲 Ăn Việt</button>
+            <button class="filter-btn" onclick="filterFood('other')">⭐ Khác</button>
+        </div>
+
+        <!-- Food Grid -->
+        <div class="food-grid" id="foodGrid">
+            
+            <!-- Pizza Items -->
+            <div class="food-card" data-category="pizza">
+                <div class="food-card-img">
+                    <img src="images/menu-pizza.jpg" alt="Pizza Gà Hawaii">
+                    <span class="food-badge">🔥 Hot</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🍕 Pizza Gà Hawaii</h3>
+                    <p class="food-card-desc">Gà tươi, dứa ngọt, phô mai mozzarella, sốt Ý</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">184.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Pizza Gà Hawaii', 184000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="pizza">
+                <div class="food-card-img">
+                    <img src="images/menu-pizza.jpg" alt="Pizza Hải Sản">
+                    <span class="food-badge">⭐ Best</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🦑 Pizza Hải Sản</h3>
+                    <p class="food-card-desc">Tôm, mực, cua tươi, nấm, hành tây</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">230.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Pizza Hải Sản', 230000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="pizza">
+                <div class="food-card-img">
+                    <img src="images/menu-pizza.jpg" alt="Pizza Rau Cải">
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🥒 Pizza Rau Cải</h3>
+                    <p class="food-card-desc">Rau cải organic, phô mai, olives, sốt tomato</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">138.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Pizza Rau Cải', 138000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Burger Items -->
+            <div class="food-card" data-category="burger">
+                <div class="food-card-img">
+                    <img src="images/menu-burger.jpg" alt="Burger Xông Khói">
+                    <span class="food-badge">🔥 Hot</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🍔 Burger Xông Khói</h3>
+                    <p class="food-card-desc">Thịt bò Angus, phô mai melted, trứng chiên</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">161.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Burger Xông Khói', 161000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="burger">
+                <div class="food-card-img">
+                    <img src="images/menu-burger.jpg" alt="Burger Triple Cheese">
+                    <span class="food-badge">⭐ Best</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🧀 Burger Triple Cheese</h3>
+                    <p class="food-card-desc">3 lớp phô mai, thịt bò Angus, trứng, bacon</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">207.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Burger Triple Cheese', 207000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="burger">
+                <div class="food-card-img">
+                    <img src="images/menu-burger.jpg" alt="Burger Gà">
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🍗 Burger Gà Giòn</h3>
+                    <p class="food-card-desc">Gà chiên vàng giòn, mayo, rau tươi</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">138.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Burger Gà Giòn', 138000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Momo Items -->
+            <div class="food-card" data-category="momo">
+                <div class="food-card-img">
+                    <img src="images/menu-momo.jpg" alt="Momo Gà">
+                    <span class="food-badge">🔥 Hot</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🥟 Momo Gà Hấp</h3>
+                    <p class="food-card-desc">Gà tươi, ginger, rau mùi thơm, sốt cay</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">115.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Momo Gà Hấp', 115000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="momo">
+                <div class="food-card-img">
+                    <img src="images/menu-momo.jpg" alt="Momo Tôm">
+                    <span class="food-badge">⭐ Best</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🦐 Momo Tôm Hải Sản</h3>
+                    <p class="food-card-desc">Tôm tươi, giò heo, hành tây, nước mắm</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">161.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Momo Tôm Hải Sản', 161000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="momo">
+                <div class="food-card-img">
+                    <img src="images/menu-momo.jpg" alt="Momo Bò">
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🥩 Momo Thịt Bò</h3>
+                    <p class="food-card-desc">Thịt bò Mỹ, hành tây, ginger thơm hương</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">184.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Momo Thịt Bò', 184000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vietnamese Items -->
+            <div class="food-card" data-category="vietnam">
+                <div class="food-card-img">
+                    <img src="images/menu-pizza.jpg" alt="Phở Bò">
+                    <span class="food-badge">🏆 Top</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🍲 Phở Bò Xuân Hương</h3>
+                    <p class="food-card-desc">Nước dùng 24h, bánh phở mềm, gừng hành</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">92.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Phở Bò', 92000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="vietnam">
+                <div class="food-card-img">
+                    <img src="images/menu-burger.jpg" alt="Cơm Tấm">
+                    <span class="food-badge">🔥 Hot</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🍚 Cơm Tấm Sài Gòn</h3>
+                    <p class="food-card-desc">Cơm tấm hấp cơ, thịt nướng, trứng, nước mắm</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">92.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Cơm Tấm Sài Gòn', 92000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="vietnam">
+                <div class="food-card-img">
+                    <img src="images/menu-momo.jpg" alt="Bún Chả">
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🍜 Bún Chả Hà Nội</h3>
+                    <p class="food-card-desc">Bún tươi, thịt nướng, nước mắm chua cay</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">115.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Bún Chả Hà Nội', 115000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Items -->
+            <div class="food-card" data-category="other">
+                <div class="food-card-img">
+                    <img src="images/menu-pizza.jpg" alt="Gà Rán">
+                    <span class="food-badge">⭐ Best</span>
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🍗 Gà Rán Crispy</h3>
+                    <p class="food-card-desc">Gà tươi ngoài giòn, trong mềm, thơm lừng</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">138.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Gà Rán Crispy', 138000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="other">
+                <div class="food-card-img">
+                    <img src="images/menu-burger.jpg" alt="Bít Tết">
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🥩 Bít Tết Bò Mỹ</h3>
+                    <p class="food-card-desc">Thịt bò Angus nướng vừa, sốt tiêu đen</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">276.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Bít Tết Bò Mỹ', 276000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="food-card" data-category="other">
+                <div class="food-card-img">
+                    <img src="images/menu-momo.jpg" alt="Chả Cá">
+                </div>
+                <div class="food-card-info">
+                    <h3 class="food-card-title">🐟 Chả Cá Lã Vọng</h3>
+                    <p class="food-card-desc">Chả cá tôm bạch tuộc, nước mắm chua cay</p>
+                    <div class="food-card-footer">
+                        <span class="food-card-price">153.000 ₫</span>
+                        <div class="food-card-qty">
+                            <button onclick="changeQty(this, -1)">−</button>
+                            <input type="number" value="1" min="1" readonly>
+                            <button onclick="changeQty(this, 1)">+</button>
+                        </div>
+                        <button class="food-card-btn" onclick="addToCartWithQty('Chả Cá Lã Vọng', 153000, this)">🛒</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- Phần Mạng Xã Hội -->
+<section class="social">
+    <div class="container text-center">
+        <h2 style="color: white;">📱 Kết Nối Với Chúng Tôi</h2>
+        <ul>
+            <li>
+                <a href="https://facebook.com" target="_blank" title="Facebook"><img src="https://img.icons8.com/fluent/50/000000/facebook-new.png" alt="Facebook"/></a>
+            </li>
+            <li>
+                <a href="https://instagram.com" target="_blank" title="Instagram"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"/></a>
+            </li>
+            <li>
+                <a href="https://twitter.com" target="_blank" title="Twitter"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"/></a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+        <div class="modal-header">
+            <h2>🔐 Đăng Nhập</h2>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">📧 Email:</label>
+                <input type="email" id="loginEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">🔑 Mật Khẩu:</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Đăng Nhập</button>
+            </div>
+            <div class="auth-link forgot-password">
+    Quên mật khẩu?
+</div>
+            <div class="auth-link">
+                Chưa có tài khoản? <a onclick="switchToRegister()">Đăng ký ngay</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeRegisterModal()">&times;</span>
+        <div class="modal-header">
+            <h2>✍️ Đăng Ký</h2>
+        </div>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="regName">👤 Họ Tên:</label>
+                <input type="text" id="regName" required>
+            </div>
+            <div class="form-group">
+                <label for="regEmail">📧 Email:</label>
+                <input type="email" id="regEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="regPhone">📱 Số Điện Thoại:</label>
+                <input type="tel" id="regPhone" required>
+            </div>
+            <div class="form-group">
+                <label for="regPassword">🔑 Mật Khẩu:</label>
+                <input type="password" id="regPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="regPassword2">✓ Nhập Lại Mật Khẩu:</label>
+                <input type="password" id="regPassword2" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Đăng Ký</button>
+            </div>
+            <div class="auth-link">
+                Đã có tài khoản? <a onclick="switchToLogin()">Đăng nhập</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+function isUserLoggedIn() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    return user && user.loggedIn === true;
+}
+
+
+// Authentication Functions
+function openLoginModal() {
+    document.getElementById('loginModal').classList.add('show');
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('show');
+}
+
+function openRegisterModal() {
+    document.getElementById('registerModal').classList.add('show');
+}
+
+function closeRegisterModal() {
+    document.getElementById('registerModal').classList.remove('show');
+}
+
+function switchToRegister() {
+    closeLoginModal();
+    openRegisterModal();
+}
+
+function switchToLogin() {
+    closeRegisterModal();
+    openLoginModal();
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    let loginModal = document.getElementById('loginModal');
+    let registerModal = document.getElementById('registerModal');
+    
+    if (event.target === loginModal) {
+        closeLoginModal();
+    }
+    if (event.target === registerModal) {
+        closeRegisterModal();
+    }
+}
+
+// Filter Food
+function filterFood(category) {
+    const cards = document.querySelectorAll('.food-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+    
+    // Update button styles
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // Show/hide cards
+    cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+            setTimeout(() => card.style.opacity = '1', 10);
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Change Quantity
+function changeQty(button, change) {
+    let qtyDiv = button.parentElement;
+    let input = qtyDiv.querySelector('input');
+    let currentValue = parseInt(input.value);
+    let newValue = currentValue + change;
+    
+    if (newValue >= 1) {
+        input.value = newValue;
+    }
+}
+
+// Add to Cart with Quantity
+
+function addToCartWithQty(name, price, button) {
+
+    // 🚨 KIỂM TRA ĐĂNG NHẬP
+    if (!isUserLoggedIn()) {
+        alert('⚠️ Vui lòng đăng nhập để thêm món ăn vào giỏ hàng!');
+        openLoginModal(); // mở popup đăng nhập
+        return;
+    }
+
+    let qtyDiv = button.parentElement.querySelector('.food-card-qty');
+    let quantity = parseInt(qtyDiv.querySelector('input').value);
+
+    let card = button.closest('.food-card');
+    let imgElement = card.querySelector('.food-card-img img');
+    let image = imgElement ? imgElement.src : 'images/menu-pizza.jpg';
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const item = cart.find(i => i.name === name);
+
+    if (item) {
+        item.quantity += quantity;
+    } else {
+        cart.push({ name, price, quantity: quantity, image: image });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    alert('✅ ' + quantity + 'x ' + name + ' đã được thêm vào giỏ hàng!');
+    qtyDiv.querySelector('input').value = 1;
+}
+
+
+
+// Add to Cart (old function - keep for compatibility)
+function addToCart(name, price) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const item = cart.find(i => i.name === name);
+    
+    if (item) {
+        item.quantity++;
+    } else {
+        cart.push({ name, price, quantity: 1 });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    alert('✅ ' + name + ' đã được thêm vào giỏ hàng!');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    // Login Form Handler
+    let loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let email = document.getElementById('loginEmail').value;
+            let password = document.getElementById('loginPassword').value;
+            
+            // Get all registered accounts
+            let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            
+            // Check if account exists and password matches
+            let account = accounts.find(acc => acc.email === email && acc.password === password);
+            
+            if (account) {
+                // Login successful
+                localStorage.setItem('user', JSON.stringify({
+                    name: account.name,
+                    email: account.email,
+                    phone: account.phone,
+                    loggedIn: true
+                }));
+                
+                updateUserProfile();
+                closeLoginModal();
+                loginForm.reset();
+                alert('✅ Đăng nhập thành công!');
+            } else {
+                alert('❌ Email hoặc mật khẩu không đúng!');
+            }
+        });
+    }
+    
+    // Register Form Handler
+    let registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let name = document.getElementById('regName').value;
+            let email = document.getElementById('regEmail').value;
+            let phone = document.getElementById('regPhone').value;
+            let password = document.getElementById('regPassword').value;
+            let password2 = document.getElementById('regPassword2').value;
+            
+            if (password !== password2) {
+                alert('⚠️ Mật khẩu không khớp!');
+                return;
+            }
+            
+            // Get existing accounts
+            let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            
+            // Check if email already exists
+            if (accounts.find(acc => acc.email === email)) {
+                alert('❌ Email này đã được đăng ký rồi!');
+                return;
+            }
+            
+            // Add new account
+            accounts.push({
+                name: name,
+                email: email,
+                phone: phone,
+                password: password
+            });
+            
+            // Save accounts
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            
+            // Auto login
+            localStorage.setItem('user', JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone,
+                loggedIn: true
+            }));
+            
+            updateUserProfile();
+            closeRegisterModal();
+            registerForm.reset();
+            alert('✅ Đăng ký thành công! Bạn đã được tự động đăng nhập.');
+        });
+    }
+    
+    updateUserProfile();
+});
+
+function updateUserProfile() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    let profileMenu = document.getElementById('profile-menu-foods');
+    let authMenu = document.getElementById('auth-menu-foods');
+    
+    if (user && user.loggedIn) {
+        if (profileMenu) profileMenu.style.display = 'inline';
+        if (authMenu) authMenu.style.display = 'none';
+        document.getElementById('user-name-foods').textContent = user.name;
+        document.getElementById('user-avatar-foods').textContent = user.name.charAt(0).toUpperCase();
+    } else {
+        if (profileMenu) profileMenu.style.display = 'none';
+        if (authMenu) authMenu.style.display = 'inline';
+    }
+}
+
+function logout() {
+    localStorage.removeItem('user');
+    updateUserProfile();
+    alert('✅ Đã đăng xuất!');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Hàng - ThanhF 1</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .order-item-remove {
+            padding: 8px 15px;
+            background: #ff6b81;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .order-item-remove:hover {
+            background: #ff5c6a;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<section class="navbar">
+    <div class="container">
+        <div class="logo">
+            <a href="index.html" title="ThanhF 1">
+                <img src="images/logo.png" class="img-responsive">
+            </a>
+        </div>
+
+        <div class="menu text-right">
+            <ul>
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="categories.html">Danh Mục</a></li>
+                <li><a href="foods.html">Thực Đơn</a></li>
+                <li><a href="order.html">Đặt Hàng</a></li>
+                <li><a href="foods.html">Quay Lại</a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</section>
+
+<!-- ORDER -->
+<section class="food-search">
+    <div class="container">
+        <h1 style="color: white; text-align: center;">🛒 Đặt Hàng Ngay</h1>
+
+        <form id="order-form" class="order">
+
+            <!-- DANH SÁCH MÓN -->
+            <fieldset>
+                <legend>📋 Món Ăn Đã Chọn</legend>
+
+                <div id="order-items"></div>
+
+                <p style="margin-top:15px; font-size: 1.3rem;">
+                    <strong>💰 Tổng Tiền:</strong>
+                    <span id="total-price" style="color: #ff6b81;">0 ₫</span>
+                </p>
+            </fieldset>
+
+            <!-- THÔNG TIN KHÁCH -->
+            <fieldset>
+                <legend>👤 Thông Tin Giao Hàng</legend>
+
+                <div class="order-label">👤 Họ và Tên</div>
+                <input type="text" id="customer-name" class="input-responsive" placeholder="Nhập họ và tên của bạn" required>
+
+                <div class="order-label">📱 Số Điện Thoại</div>
+                <input type="tel" id="customer-phone" class="input-responsive" placeholder="0909-xxx-xxx" required>
+
+                <div class="order-label">📧 Email</div>
+                <input type="email" id="customer-email" class="input-responsive" placeholder="example@email.com" required>
+
+                <div class="order-label">📍 Địa Chỉ Giao Hàng</div>
+                <textarea id="customer-address" rows="4" class="input-responsive" placeholder="Nhập địa chỉ giao hàng chi tiết" required></textarea>
+
+                <div class="order-label">💬 Ghi Chú Đặc Biệt (Tùy Chọn)</div>
+                <textarea id="customer-notes" rows="3" class="input-responsive" placeholder="Ví dụ: Không cay, thêm sauce..."></textarea>
+
+                <input type="submit" value="✅ Xác Nhận Đặt Hàng" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;">
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- Social Section -->
+<section class="social">
+    <div class="container text-center">
+        <h2 style="color: white; margin-bottom: 2%;">📱 Theo Dõi ThanhF 1</h2>
+        <ul>
+            <li>
+                <a href="https://facebook.com" target="_blank"><img src="https://img.icons8.com/fluent/50/000000/facebook-new.png" alt="Facebook"/></a>
+            </li>
+            <li>
+                <a href="https://instagram.com" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"/></a>
+            </li>
+            <li>
+                <a href="https://twitter.com" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"/></a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const itemsDiv = document.getElementById('order-items');
+    const totalSpan = document.getElementById('total-price');
+    const form = document.getElementById('order-form');
+    let cart = [];
+
+    function displayCart() {
+        cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let total = 0;
+        itemsDiv.innerHTML = '';
+
+        if (cart.length === 0) {
+            itemsDiv.innerHTML = '<p style="color: #ff6b81; font-weight: bold;">❌ Chưa có món ăn nào được chọn. <a href="foods.html" style="color: #ff6b81;">📍 Quay lại để chọn</a></p>';
+            totalSpan.textContent = '0 ₫';
+            return;
+        }
+
+        cart.forEach((item, index) => {
+            const itemTotal = (item.price || 0) * item.quantity;
+            total += itemTotal;
+            
+            // Default image if not set
+            const imgSrc = item.image || 'images/menu-pizza.jpg';
+
+            itemsDiv.innerHTML += `
+                <div class="food-menu-box" style="margin-bottom: 20px;">
+                    <div class="food-menu-img">
+                        <img src="${imgSrc}" class="img-responsive img-curve" alt="${item.name}">
+                    </div>
+
+                    <div class="food-menu-desc">
+                        <h4>${item.name}</h4>
+                        <p class="food-price">${(item.price || 0).toLocaleString('vi-VN')} ₫</p>
+
+                        <p style="margin: 10px 0;">
+                            <strong>Số lượng:</strong>
+                            <button type="button" onclick="changeQty(${index}, -1)" style="padding: 5px 10px; background: #ff6b81; color: white; border: none; border-radius: 4px; cursor: pointer;">−</button>
+                            <strong style="margin: 0 10px; display: inline-block; min-width: 30px; text-align: center;">${item.quantity}</strong>
+                            <button type="button" onclick="changeQty(${index}, 1)" style="padding: 5px 10px; background: #ff6b81; color: white; border: none; border-radius: 4px; cursor: pointer;">+</button>
+                        </p>
+
+                        <p style="margin: 10px 0;">
+                            <strong>Thành tiền: </strong>
+                            <span style="color: #ff6b81; font-weight: bold; font-size: 1.1rem;">${itemTotal.toLocaleString('vi-VN')} ₫</span>
+                        </p>
+                        <button type="button" onclick="removeItem(${index})" class="order-item-remove">🗑️ Xóa Món</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        totalSpan.textContent = total.toLocaleString('vi-VN') + ' ₫';
+    }
+
+    window.changeQty = function(index, delta) {
+        cart[index].quantity += delta;
+        if (cart[index].quantity <= 0) {
+            cart.splice(index, 1);
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+    };
+
+    window.removeItem = function(index) {
+        cart.splice(index, 1);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+    };
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (cart.length === 0) {
+            alert('❌ Vui lòng chọn ít nhất 1 món ăn!');
+            return;
+        }
+
+        const name = document.getElementById('customer-name').value;
+        const phone = document.getElementById('customer-phone').value;
+        const email = document.getElementById('customer-email').value;
+        const address = document.getElementById('customer-address').value;
+        const notes = document.getElementById('customer-notes').value;
+
+        // Save order info
+        const order = {
+            items: cart,
+            customer: { name, phone, email, address, notes },
+            timestamp: new Date().toLocaleString('vi-VN')
+        };
+
+        localStorage.setItem('lastOrder', JSON.stringify(order));
+        localStorage.removeItem('cart');
+
+        alert('✅ Đơn hàng của bạn đã được xác nhận!\n\n👤 ' + name + '\n📱 ' + phone + '\n\nCảm ơn bạn đã đặt hàng tại ThanhF 1!');
+        window.location.href = 'order-success.html';
+    });
+
+    displayCart();
+});
+</script>
+
+</body>
+</html>

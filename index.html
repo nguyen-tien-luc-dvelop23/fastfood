@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThanhF 1 - Nhà Hàng Ăn Nhanh & Ẩm Thực Đẳng Cấp</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        @keyframes zoomIn {
+            from { transform: scale(.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes slideInTop {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .welcome-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+        .welcome-modal div {
+            animation: zoomIn 0.5s ease-in-out;
+        }
+
+        .welcome-modal.hidden {
+    display: none !important;
+}
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100000;
+            animation: slideInTop 0.4s ease-out;
+            max-width: 400px;
+            font-size: 15px;
+        }
+
+        .notification.success {
+            border-left: 4px solid #27ae60;
+            background: #f0f9f6;
+            color: #27ae60;
+        }
+
+        .notification.warning {
+            border-left: 4px solid #f39c12;
+            background: #fef9f0;
+            color: #d68910;
+        }
+
+        .notification.error {
+            border-left: 4px solid #e74c3c;
+            background: #fdf2f0;
+            color: #c0392b;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3498db;
+            background: #f0f7fc;
+            color: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+   <div id="welcomeModal" class="welcome-modal">
+    <div style="
+        background:white;
+        padding:25px;
+        border-radius:18px;
+        max-width:480px;
+        width:90%;
+        text-align:center;
+    ">
+       <h2 style="color:#ff6b81">🍔 Chào mừng đến với ThanhF 1</h2>
+        <p>Website đặt đồ ăn nhanh – giao tận nơi.</p>
+        <button type="button" class="btn btn-primary" onclick="acceptWelcome()">
+    ✅ Tôi đã hiểu
+</button>
+    </div>
+</div>
+
+    <!-- Phần Navbar Bắt Đầu -->
+    <section class="navbar">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" title="ThanhF 1">
+                    <img src="images/logo.png" alt="Logo ThanhF 1" class="img-responsive">
+                </a>
+            </div>
+
+            <div class="menu text-right">
+                <ul>
+                    <li>
+                        <a href="index.html">Trang Chủ</a>
+                    </li>
+                    <li>
+                        <a href="categories.html">Danh Mục</a>
+                    </li>
+                    <li>
+                        <a href="foods.html">Thực Đơn</a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="goToOrder(); return false;">Đặt Hàng</a>
+                    </li>
+                    <li id="profile-menu" style="display:none;">
+                        <a href="profile.html" style="font-weight: 700; color: #ff6b81;">👤 Hồ Sơ</a>
+                        <span style="margin: 0 8px; color: #dfe6e9;">|</span>
+                        <a href="#" onclick="logout(); return false;" style="color: #ff6b81; font-size: 0.9rem; text-decoration: none;">🚪 Đăng Xuất</a>
+                    </li>
+                    <li id="auth-menu">
+                        <a href="#" class="btn btn-primary" style="padding: 8px 15px; margin: 0 5px;" onclick="openLoginModal(); return false;">🔐 Đăng Nhập</a>
+                        <a href="#" class="btn btn-primary" style="padding: 8px 15px; margin: 0 5px;" onclick="openRegisterModal(); return false;">✍️ Đăng Ký</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </section>
+    <!-- Phần Navbar Kết Thúc -->
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeLoginModal()">&times;</span>
+            <div class="modal-header">
+                <h2>🔐 Đăng Nhập</h2>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">📧 Email:</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">🔑 Mật Khẩu:</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Đăng Nhập</button>
+                </div>
+                <div class="auth-link forgot-password">
+    Quên mật khẩu?
+</div>
+                <div class="auth-link">
+                    Chưa có tài khoản? <a onclick="switchToRegister()">Đăng ký ngay</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeRegisterModal()">&times;</span>
+            <div class="modal-header">
+                <h2>✍️ Đăng Ký</h2>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="regName">👤 Họ Tên:</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">📧 Email:</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPhone">📱 Số Điện Thoại:</label>
+                    <input type="tel" id="regPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">🔑 Mật Khẩu:</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword2">✓ Nhập Lại Mật Khẩu:</label>
+                    <input type="password" id="regPassword2" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Đăng Ký</button>
+                </div>
+                <div class="auth-link">
+                    Đã có tài khoản? <a onclick="switchToLogin()">Đăng nhập</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Phần Tìm Kiếm Món Ăn Bắt Đầu -->
+    <section class="food-search text-center">
+        <div class="container">
+            <h1>Khám Phá Những Món Ăn Tuyệt Vời</h1>
+            <form action="food-search.html" method="POST">
+                <input type="search" name="search" placeholder="Tìm kiếm món ăn yêu thích..." required>
+                <input type="submit" name="submit" value="🔍 Tìm Kiếm" class="btn btn-primary">
+            </form>
+        </div>
+    </section>
+    <!-- Phần Tìm Kiếm Món Ăn Kết Thúc -->
+
+    <!-- Phần Danh Mục Bắt Đầu -->
+    <section class="categories">
+        <div class="container">
+            <h2>🍽️ Khám Phá Danh Mục Món Ăn</h2>
+
+            <a href="category-foods.html">
+                <div class="box-3 float-container">
+                    <img src="images/pizza.jpg" alt="Pizza" class="img-responsive img-curve">
+                    <h3 class="float-text text-white">🍕 Pizza</h3>
+                </div>
+            </a>
+
+            <a href="category-foods.html">
+                <div class="box-3 float-container">
+                    <img src="images/burger.jpg" alt="Burger" class="img-responsive img-curve">
+                    <h3 class="float-text text-white">🍔 Burger</h3>
+                </div>
+            </a>
+
+            <a href="category-foods.html">
+                <div class="box-3 float-container">
+                    <img src="images/momo.jpg" alt="Momo" class="img-responsive img-curve">
+                    <h3 class="float-text text-white">🥟 Momo</h3>
+                </div>
+            </a>
+
+            <div class="clearfix"></div>
+        </div>
+    </section>
+    <!-- Phần Danh Mục Kết Thúc -->
+
+    <!-- Phần Ăn Nhanh Bắt Đầu -->
+    <section class="fast-food">
+        <div class="container">
+            <h2>⚡ Món Ăn Nhanh - Gọi Là Ngay</h2>
+
+            <div class="fast-food-item">
+                <img src="images/burger.jpg" alt="Combo Burger Nhanh" class="img-responsive img-curve">
+                <h4>Combo Burger Siêu Tốc</h4>
+                <p class="food-price">115.000 ₫</p>
+                <p>Burger tươi ngon + khoai tây chiên + nước ngọt</p>
+                <button type="button" onclick="addToCart('Combo Burger Siêu Tốc', 115000, 'images/burger.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+            </div>
+
+            <div class="fast-food-item">
+                <img src="images/pizza.jpg" alt="Bánh Mì Nhanh" class="img-responsive img-curve">
+                <h4>Pizza Hấp Dẫn 30 Phút</h4>
+                <p class="food-price">138.000 ₫</p>
+                <p>Pizza nóng hổi, phô mai mỏng, topping đa dạng</p>
+                <button type="button" onclick="addToCart('Pizza Hấp Dẫn 30 Phút', 138000, 'images/pizza.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+            </div>
+
+            <div class="fast-food-item">
+                <img src="images/momo.jpg" alt="Momo Nhanh" class="img-responsive img-curve">
+                <h4>Momo Nhân Thịt Tươi</h4>
+                <p class="food-price">92.000 ₫</p>
+                <p>Momo hấp nóng, nhân thịt béo ngậy, sốt cay</p>
+                <button type="button" onclick="addToCart('Momo Nhân Thịt Tươi', 92000, 'images/momo.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+            </div>
+
+            <div class="fast-food-item">
+                <img src="images/burger.jpg" alt="Gà Rán Nhanh" class="img-responsive img-curve">
+                <h4>🍗 Gà Rán Giòn Ngon</h4>
+                <p class="food-price">138.000 ₫</p>
+                <p>Gà tươi chiên ngoài giòn, trong mềm, thơm lừng</p>
+                <button type="button" onclick="addToCart('🍗 Gà Rán Giòn Ngon', 138000, 'images/burger.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+            </div>
+
+            <div class="fast-food-item">
+                <img src="images/pizza.jpg" alt="Phở Nhanh" class="img-responsive img-curve">
+                <h4>🍲 Phở Bò Nhanh Chóng</h4>
+                <p class="food-price">92.000 ₫</p>
+                <p>Phở bò nước dùng thơm, bánh phở mềm, giá sạch</p>
+                <button type="button" onclick="addToCart('🍲 Phở Bò Nhanh Chóng', 92000, 'images/pizza.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+            </div>
+
+            <div class="fast-food-item">
+                <img src="images/momo.jpg" alt="Bánh Mì Nhanh" class="img-responsive img-curve">
+                <h4>🥖 Bánh Mì Thịt Ngoài</h4>
+                <p class="food-price">69.000 ₫</p>
+                <p>Bánh mì nóng, pâté, dưa chua, rau xanh</p>
+                <button type="button" onclick="addToCart('🥖 Bánh Mì Thịt Ngoài', 69000, 'images/momo.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </section>
+    <!-- Phần Ăn Nhanh Kết Thúc -->
+
+    <!-- Phần Thực Đơn Bắt Đầu -->
+    <section class="food-menu">
+        <div class="container">
+            <h2>🥘 Thực Đơn Hôm Nay</h2>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-pizza.jpg" alt="Pizza Gà Hawaii" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍕 Pizza Gà Hawaii</h4>
+                    <p class="food-price">184.000 ₫</p>
+                    <p class="food-detail">
+                        Được làm từ sốt Ý ngon, thịt gà tươi, dứa ngọt ngào và phô mai mozzarella. Món ăn yêu thích của nhiều người.
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍕 Pizza Gà Hawaii', 184000, 'images/menu-pizza.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-burger.jpg" alt="Burger Xông Khói" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍔 Burger Xông Khói Premium</h4>
+                    <p class="food-price">161.000 ₫</p>
+                    <p class="food-detail">
+                        Thịt bò chất lượng cao, xông khói ngon, phô mai melted, rau tươi. Hương vị tuyệt hảo bạn không thể bỏ lỡ.
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍔 Burger Xông Khói Premium', 161000, 'images/menu-burger.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-burger.jpg" alt="Burger Đặc Biệt" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍔 Burger Đặc Biệt Triple Cheese</h4>
+                    <p class="food-price">207.000 ₫</p>
+                    <p class="food-detail">
+                        3 lớp phô mai khác nhau, thịt bò Angus, trứng chiên, bacon ngon. Siêu thơm, siêu ngon!
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍔 Burger Đặc Biệt Triple Cheese', 207000, 'images/menu-burger.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-pizza.jpg" alt="Pizza Seafood" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍕 Pizza Hải Sản Cao Cấp</h4>
+                    <p class="food-price">230.000 ₫</p>
+                    <p class="food-detail">
+                        Tôm, mực, cua tươi sống, hành tây, nấm. Topping đầy đủ, sốt tomato chuẩn Ý.
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍕 Pizza Hải Sản Cao Cấp', 230000, 'images/menu-pizza.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-pizza.jpg" alt="Pizza Rau Cải" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍕 Pizza Rau Cải Xanh</h4>
+                    <p class="food-price">138.000 ₫</p>
+                    <p class="food-detail">
+                        Dành cho những ai yêu thích sức khỏe. Rau cải organic, phô mai, nước sốt tự nhiên.
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍕 Pizza Rau Cải Xanh', 138000, 'images/menu-pizza.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-momo.jpg" alt="Momo Gà Hấp" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🥟 Momo Gà Hấp Tươi Ngon</h4>
+                    <p class="food-price">115.000 ₫</p>
+                    <p class="food-detail">
+                        Momo hấp nóng, nhân gà tươi, ginger tàn, rau mùi thơm. Ăn kèm sốt cay ngon ngon.
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🥟 Momo Gà Hấp Tươi Ngon', 115000, 'images/menu-momo.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-pizza.jpg" alt="Spring Roll" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🌯 Cuốn Lá Nho Tươi</h4>
+                    <p class="food-price">92.000 ₫</p>
+                    <p class="food-detail">
+                        Cuốn lá nho với tôm, thịt gà, rau xanh. Ăn kèm nước mắm chua ngọt hấp dẫn.
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🌯 Cuốn Lá Nho Tươi', 92000, 'images/menu-pizza.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-burger.jpg" alt="Fried Chicken" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍗 Gà Rán Crispy Vàng Ơ</h4>
+                    <p class="food-price">138.000 ₫</p>
+                    <p class="food-detail">
+                        Gà tươi chiên ngoài giòn, trong mềm. Thơm lừng hương gia vị đặc biệt.
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍗 Gà Rán Crispy Vàng Ơ', 138000, 'images/menu-burger.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-pizza.jpg" alt="Phở" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍲 Phở Bò Xuân Hương</h4>
+                    <p class="food-price">92.000 ₫</p>
+                    <p class="food-detail">
+                        Phở bò nước dùng 24h, bánh phở mềm, thơm gừng hành. Truyền thống Hà Nội!
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍲 Phở Bò Xuân Hương', 92000, 'images/menu-pizza.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="food-menu-box">
+                <div class="food-menu-img">
+                    <img src="images/menu-momo.jpg" alt="Cơm Tấm" class="img-responsive img-curve">
+                </div>
+
+                <div class="food-menu-desc">
+                    <h4>🍚 Cơm Tấm Sài Gòn Hấp Dẫn</h4>
+                    <p class="food-price">92.000 ₫</p>
+                    <p class="food-detail">
+                        Cơm tấm hấp cơ, thịt nướng, trứng, nước mắm. Mùi vị Sài Gòn xưa!
+                    </p>
+                    <br>
+
+                    <button type="button" onclick="addToCart('🍚 Cơm Tấm Sài Gòn Hấp Dẫn', 92000, 'images/menu-momo.jpg')" class="btn btn-primary">🛒 Thêm Vào Giỏ</button>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+
+        <p class="text-center" style="margin-top: 3%; font-size: 1.2rem;">
+            <a href="foods.html" class="btn btn-primary">👁️ Xem Tất Cả Món Ăn</a>
+        </p>
+    </section>
+    <!-- Phần Thực Đơn Kết Thúc -->
+
+    <!-- Phần Mạng Xã Hội Bắt Đầu -->
+    <section class="social">
+        <div class="container text-center">
+            <h2 style="color: white;">📱 Kết Nối Với Chúng Tôi</h2>
+            <ul>
+                <li>
+                    <a href="https://facebook.com" target="_blank" title="Facebook"><img src="https://img.icons8.com/fluent/50/000000/facebook-new.png" alt="Facebook"/></a>
+                </li>
+                <li>
+                    <a href="https://instagram.com" target="_blank" title="Instagram"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"/></a>
+                </li>
+                <li>
+                    <a href="https://twitter.com" target="_blank" title="Twitter"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"/></a>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <!-- Phần Mạng Xã Hội Kết Thúc -->
+
+
+</body>
+<script>
+// Show Notification Function
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(-100%)';
+        notification.style.transition = 'all 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+function acceptWelcome() {
+    localStorage.setItem("welcomeAccepted", "true");
+    const modal = document.getElementById("welcomeModal");
+    if (modal) {
+        modal.classList.add("hidden");
+    }
+}
+
+window.onload = function () {
+    const modal = document.getElementById("welcomeModal");
+    if (!modal) return;
+    
+    // Always show modal unless user explicitly accepted it
+    const accepted = localStorage.getItem("welcomeAccepted");
+    if (accepted === "true") {
+        modal.classList.add("hidden");
+    } else {
+        modal.classList.remove("hidden");
+    }
+};
+// Authentication Functions
+function openLoginModal() {
+    document.getElementById('loginModal').classList.add('show');
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').classList.remove('show');
+}
+
+function openRegisterModal() {
+    document.getElementById('registerModal').classList.add('show');
+}
+
+function closeRegisterModal() {
+    document.getElementById('registerModal').classList.remove('show');
+}
+
+function switchToRegister() {
+    closeLoginModal();
+    openRegisterModal();
+}
+
+function switchToLogin() {
+    closeRegisterModal();
+    openLoginModal();
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    let loginModal = document.getElementById('loginModal');
+    let registerModal = document.getElementById('registerModal');
+    
+    if (event.target === loginModal) {
+        closeLoginModal();
+    }
+    if (event.target === registerModal) {
+        closeRegisterModal();
+    }
+}
+
+// Login Form Handler
+document.addEventListener('DOMContentLoaded', function() {
+    let loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let email = document.getElementById('loginEmail').value;
+            let password = document.getElementById('loginPassword').value;
+            
+            // Get all registered accounts
+            let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            
+            // Check if account exists and password matches
+            let account = accounts.find(acc => acc.email === email && acc.password === password);
+            
+            if (account) {
+                // Login successful - save current user session
+                localStorage.setItem('user', JSON.stringify({
+                    name: account.name,
+                    email: account.email,
+                    phone: account.phone,
+                    loggedIn: true
+                }));
+                
+                updateUserProfile();
+                closeLoginModal();
+                loginForm.reset();
+                alert('✅ Đăng nhập thành công!');
+            } else {
+                alert('❌ Email hoặc mật khẩu không đúng!');
+            }
+        });
+    }
+    
+    // Register Form Handler
+    let registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let name = document.getElementById('regName').value;
+            let email = document.getElementById('regEmail').value;
+            let phone = document.getElementById('regPhone').value;
+            let password = document.getElementById('regPassword').value;
+            let password2 = document.getElementById('regPassword2').value;
+            
+            if (password !== password2) {
+                alert('⚠️ Mật khẩu không khớp!');
+                return;
+            }
+            
+            // Get existing accounts
+            let accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+            
+            // Check if email already exists
+            if (accounts.find(acc => acc.email === email)) {
+                alert('❌ Email này đã được đăng ký rồi!');
+                return;
+            }
+            
+            // Add new account to accounts list
+            accounts.push({
+                name: name,
+                email: email,
+                phone: phone,
+                password: password
+            });
+            
+            // Save accounts list
+            localStorage.setItem('accounts', JSON.stringify(accounts));
+            
+            // Login user immediately after registration
+            localStorage.setItem('user', JSON.stringify({
+                name: name,
+                email: email,
+                phone: phone,
+                loggedIn: true
+            }));
+            
+            updateUserProfile();
+            closeRegisterModal();
+            registerForm.reset();
+            alert('✅ Đăng ký thành công! Bạn đã được tự động đăng nhập.');
+        });
+    }
+    
+    // Check if user already logged in
+    updateUserProfile();
+});
+
+function updateUserProfile() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    let profileMenu = document.getElementById('profile-menu');
+    let authMenu = document.getElementById('auth-menu');
+    
+    if (user && user.loggedIn) {
+        // Show user profile
+        if (profileMenu) profileMenu.style.display = 'inline';
+        if (authMenu) authMenu.style.display = 'none';
+        document.getElementById('user-name').textContent = user.name;
+        document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+    } else {
+        // Show login/register buttons
+        if (profileMenu) profileMenu.style.display = 'none';
+        if (authMenu) authMenu.style.display = 'inline';
+    }
+}
+
+function logout() {
+    localStorage.removeItem('user');
+    updateUserProfile();
+    showNotification('✅ Đã đăng xuất thành công!', 'success');
+}
+
+// Add to Cart Function
+function addToCart(name, price, image) {
+    // Check if user is logged in
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.loggedIn) {
+        showNotification('⚠️ Vui lòng đăng nhập để đặt hàng!', 'warning');
+        openLoginModal();
+        return;
+    }
+    
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Check if item already in cart
+    let existingItem = cart.find(item => item.name === name);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+        showNotification('✅ Đã thêm ' + name + ' vào giỏ hàng!', 'success');
+    } else {
+        cart.push({
+            name: name,
+            price: price,
+            image: image,
+            quantity: 1
+        });
+        showNotification('✅ Đã thêm ' + name + ' vào giỏ hàng! (' + price.toLocaleString('vi-VN') + ' ₫)', 'success');
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Navigate to order page
+function goToOrder() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (!user || !user.loggedIn) {
+        showNotification('⚠️ Vui lòng đăng nhập để đặt hàng!', 'warning');
+        openLoginModal();
+        return;
+    }
+    window.location.href = 'order.html';
+}
+
+// Navigate to cart
+function goToCart() {
+    window.location.href = 'order_fixed.html';
+}
+
+</script>
+</html>
