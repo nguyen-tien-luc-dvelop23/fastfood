@@ -8,38 +8,31 @@
 </head>
 
 <body>
-    <!-- Phần Navbar -->
-    <section class="navbar">
-        <div class="container">
+    <!-- Header (standardized) -->
+    <header class="navbar" role="banner">
+        <div class="container" style="display:flex; align-items:center; gap:12px;">
             <div class="logo">
-                <a href="index.html" title="ThanhF 1">
-                    <img src="images/logo.png" alt="Logo ThanhF 1" class="img-responsive">
+                <a href="index.html" title="ThanhF">
+                    <img src="images/logo.png" alt="ThanhF logo" class="img-responsive">
                 </a>
             </div>
 
-            <div class="menu text-right">
+            <nav class="menu" role="navigation" aria-label="Main menu">
                 <ul>
-                    <li>
-                        <a href="index.html">Trang Chủ</a>
-                    </li>
-                    <li>
-                        <a href="categories.html">Danh Mục</a>
-                    </li>
-                    <li>
-                        <a href="foods.html">Thực Đơn</a>
-                    </li>
-                    <li>
-                        <a href="order.html">Đặt Hàng</a>
-                    </li>
-                    <li>
-                        <a href="#">Liên Hệ</a>
-                    </li>
+                    <li><a href="index.html">Trang Chủ</a></li>
+                    <li><a href="categories.html">Danh Mục</a></li>
+                    <li><a href="foods.html">Thực Đơn</a></li>
+                    <li><a href="#" onclick="goToOrder(); return false;">Đặt Hàng</a></li>
                 </ul>
-            </div>
+            </nav>
 
-            <div class="clearfix"></div>
+            <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+                <a href="order_fixed.html" class="btn" title="Giỏ hàng">🛒 Giỏ (<span id="cart-count">0</span>)</a>
+                <div id="profile-menu" style="display:none;"><a href="profile.html">👤 Hồ Sơ</a></div>
+                <div id="auth-menu"><a href="#" class="btn btn-primary" onclick="openLoginModal(); return false;">🔐 Đăng Nhập</a></div>
+            </div>
         </div>
-    </section>
+    </header>
 
     <!-- Phần Danh Mục -->
     <section class="categories">
@@ -134,25 +127,37 @@
         </div>
     </section>
 
-    <!-- Phần Mạng Xã Hội -->
-    <section class="social">
-        <div class="container text-center">
-            <h2 style="color: white; margin-bottom: 2%;">📱 Theo Dõi ThanhF 1</h2>
-            <ul>
-                <li>
-                    <a href="https://facebook.com" target="_blank"><img src="https://img.icons8.com/fluent/50/000000/facebook-new.png" alt="Facebook"/></a>
-                </li>
-                <li>
-                    <a href="https://instagram.com" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"/></a>
-                </li>
-                <li>
-                    <a href="https://twitter.com" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"/></a>
-                </li>
-            </ul>
+    <!-- Footer (standardized) -->
+    <footer class="site-footer">
+        <div class="container" style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+            <div style="flex:1;min-width:200px;">
+                <a href="index.html"><img src="images/logo.png" alt="ThanhF" style="height:48px"></a>
+                <p style="color:#777;margin-top:8px;">ThanhF — Đồ ăn nhanh giao tận nơi</p>
+            </div>
+            <div style="flex:1;min-width:160px;">
+                <h4 style="margin:0 0 8px;">Liên kết</h4>
+                <ul style="list-style:none;padding:0;margin:0;color:#666;">
+                    <li><a href="index.html">Trang Chủ</a></li>
+                    <li><a href="categories.html">Danh Mục</a></li>
+                    <li><a href="foods.html">Thực Đơn</a></li>
+                    <li><a href="order_fixed.html">Giỏ Hàng</a></li>
+                </ul>
+            </div>
+            <div style="flex:1;min-width:200px;">
+                <h4 style="margin:0 0 8px;">Liên hệ</h4>
+                <p style="color:#666;margin:0;">Hotline: <strong>1900-1234</strong><br>Email: <a href="mailto:hello@thanf.vn">hello@thanf.vn</a></p>
+            </div>
+            <div style="flex:1;min-width:160px;">
+                <h4 style="margin:0 0 8px;">Kết nối</h4>
+                <p><a href="https://facebook.com" target="_blank"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png" alt="fb"></a> <a href="https://instagram.com" target="_blank"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png" alt="ig"></a></p>
+            </div>
         </div>
-    </section>
+        <div style="text-align:center;color:#aaa;margin-top:12px;">© 2026 ThanhF — Bảo lưu mọi quyền.</div>
+    </footer>
 
 
 
+</body>
+    <script src="js/site.js"></script>
 </body>
 </html>
