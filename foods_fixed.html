@@ -5,6 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thực Đơn Đầy Đủ - ThanhF 1</title>
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        @keyframes zoomIn {
+            from { transform: scale(.85); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes slideInTop {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100000;
+            animation: slideInTop 0.4s ease-out;
+            max-width: 400px;
+            font-size: 15px;
+        }
+
+        .notification.success {
+            border-left: 4px solid #27ae60;
+            background: #f0f9f6;
+            color: #27ae60;
+        }
+
+        .notification.warning {
+            border-left: 4px solid #f39c12;
+            background: #fef9f0;
+            color: #d68910;
+        }
+
+        .notification.error {
+            border-left: 4px solid #e74c3c;
+            background: #fdf2f0;
+            color: #c0392b;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3498db;
+            background: #f0f7fc;
+            color: #2980b9;
+        }
+    </style>
 </head>
 
 <body>
@@ -549,7 +605,7 @@ function addToCartWithQty(name, price, image, button) {
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
-    alert('✅ ' + quantity + 'x ' + name + ' đã được thêm vào giỏ hàng!');
+    showNotification('✅ ' + quantity + 'x ' + name + ' đã được thêm vào giỏ hàng!', 'success');
     
     // Reset quantity input
     qtyDiv.querySelector('input').value = 1;
@@ -567,7 +623,7 @@ function addToCart(name, price) {
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
-    alert('✅ ' + name + ' đã được thêm vào giỏ hàng!');
+    showNotification('✅ ' + name + ' đã được thêm vào giỏ hàng!', 'success');
 }
 
 // Initialize
@@ -598,9 +654,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateUserProfile();
                 closeLoginModal();
                 loginForm.reset();
-                alert('✅ Đăng nhập thành công!');
+                showNotification('✅ Đăng nhập thành công!', 'success');
             } else {
-                alert('❌ Email hoặc mật khẩu không đúng!');
+                showNotification('❌ Email hoặc mật khẩu không đúng!', 'error');
             }
         });
     }
@@ -617,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let password2 = document.getElementById('regPassword2').value;
             
             if (password !== password2) {
-                alert('⚠️ Mật khẩu không khớp!');
+                showNotification('⚠️ Mật khẩu không khớp!', 'warning');
                 return;
             }
             
@@ -626,7 +682,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Check if email already exists
             if (accounts.find(acc => acc.email === email)) {
-                alert('❌ Email này đã được đăng ký rồi!');
+                showNotification('❌ Email này đã được đăng ký rồi!', 'error');
                 return;
             }
             
@@ -652,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateUserProfile();
             closeRegisterModal();
             registerForm.reset();
-            alert('✅ Đăng ký thành công! Bạn đã được tự động đăng nhập.');
+            showNotification('✅ Đăng ký thành công! Bạn đã được tự động đăng nhập.', 'success');
         });
     }
     
@@ -667,8 +723,10 @@ function updateUserProfile() {
     if (user && user.loggedIn) {
         if (profileMenu) profileMenu.style.display = 'inline';
         if (authMenu) authMenu.style.display = 'none';
-        document.getElementById('user-name-foods').textContent = user.name;
-        document.getElementById('user-avatar-foods').textContent = user.name.charAt(0).toUpperCase();
+        let userNameEl = document.getElementById('user-name-foods');
+        if (userNameEl) userNameEl.textContent = user.name;
+        let userAvatarEl = document.getElementById('user-avatar-foods');
+        if (userAvatarEl) userAvatarEl.textContent = user.name.charAt(0).toUpperCase();
     } else {
         if (profileMenu) profileMenu.style.display = 'none';
         if (authMenu) authMenu.style.display = 'inline';
@@ -678,7 +736,7 @@ function updateUserProfile() {
 function logout() {
     localStorage.removeItem('user');
     updateUserProfile();
-    alert('✅ Đã đăng xuất!');
+    showNotification('✅ Đã đăng xuất!', 'success');
 }
 </script>
 
