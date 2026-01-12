@@ -38,21 +38,26 @@
 
 
 <body>
-<!-- NAVBAR -->
-<section class="navbar">
-  <div class="container">
+<!-- Header (standardized) -->
+<header class="navbar" role="banner">
+  <div class="container" style="display:flex; align-items:center; gap:12px;">
     <div class="logo">
       <a href="index.html"><img src="images/logo.png" class="img-responsive"></a>
     </div>
-    <div class="menu text-right">
+    <nav class="menu" role="navigation" aria-label="Main menu">
       <ul>
         <li><a href="index.html">Trang Chủ</a></li>
         <li><a href="foods.html">Thực Đơn</a></li>
-        <li><a href="order.html">Đặt Hàng</a></li>
+        <li><a href="#" onclick="goToOrder(); return false;">Đặt Hàng</a></li>
       </ul>
+    </nav>
+    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+      <a href="order_fixed.html" class="btn" title="Giỏ hàng">🛒 Giỏ (<span id="cart-count">0</span>)</a>
+      <div id="profile-menu" style="display:none;"><a href="profile.html">👤 Hồ Sơ</a></div>
+      <div id="auth-menu"><a href="#" class="btn btn-primary" onclick="openLoginModal(); return false;">🔐 Đăng Nhập</a></div>
     </div>
   </div>
-</section>
+</header>
 
 <!-- HEADER -->
 <section class="food-search text-center" style="background:#ff6b81;color:#fff;padding:30px 0;">
@@ -112,7 +117,7 @@
 <div id="qrModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);z-index:9999;">
   <div class="modal-card" style="max-width:520px;margin:6% auto;">
     <h3 style="margin-top:0">Quét QR để thanh toán</h3>
-    <img src="images/qr-thanh-toan.png" style="width:260px;border-radius:12px;margin:10px 0">
+    <img id="qrImage" src="images/qr-thanh-toan.png" style="width:260px;border-radius:12px;margin:10px 0">
 
     <p>💰 Số tiền cần thanh toán</p>
     <p id="qrMoney" style="font-size:1.6rem;color:#ff6b81;font-weight:bold">0 ₫</p>
@@ -222,8 +227,23 @@ document.getElementById("orderForm").addEventListener("submit", e => {
   }
 
   const pay = document.querySelector("input[name='payment']:checked").value;
-  if (pay === "qr") openQR();
-  else finishOrder();
+  if (pay === "qr") {
+    // compute total and prefer merchant modal if available
+    let subtotal = cart.reduce((s,i)=>s+i.price*i.quantity,0);
+    let ship = subtotal > 500000 ? 0 : 30000;
+    let total = subtotal + ship;
+    if (typeof openMerchantQR === 'function') {
+      openMerchantQR(total, getQRNote());
+    } else {
+      openQR();
+    }
+  } else finishOrder();
+});
+
+// If merchant QR modal confirms payment, finalize order same as confirmPaid
+document.addEventListener('merchant-qr-paid', function(){
+  showNotification('✅ Đã ghi nhận thanh toán QR!', 'success');
+  setTimeout(finishOrder, 800);
 });
 
 
@@ -233,10 +253,13 @@ function openQR(){
   let ship = subtotal > 500000 ? 0 : 30000;
   let total = subtotal + ship;
 
-  document.getElementById("qrMoney").innerText =
-    total.toLocaleString("vi-VN")+" ₫";
-
+  document.getElementById("qrMoney").innerText = total.toLocaleString("vi-VN")+" ₫";
   document.getElementById("qrNote").innerText = getQRNote();
+  // Prefer merchant QR image if configured
+  try {
+    const merchant = localStorage.getItem('merchantQR');
+    if (merchant && document.getElementById('qrImage')) document.getElementById('qrImage').src = merchant;
+  } catch(e){}
   document.getElementById("qrModal").style.display="block";
 }
 
@@ -254,6 +277,36 @@ function finishOrder(){
 
 renderCart();
 </script>
+
+  <!-- Footer (standardized) -->
+  <footer class="site-footer">
+    <div class="container" style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="flex:1;min-width:200px;">
+        <a href="index.html"><img src="images/logo.png" alt="ThanhF" style="height:48px"></a>
+        <p style="color:#777;margin-top:8px;">ThanhF — Đồ ăn nhanh giao tận nơi</p>
+      </div>
+      <div style="flex:1;min-width:160px;">
+        <h4 style="margin:0 0 8px;">Liên kết</h4>
+        <ul style="list-style:none;padding:0;margin:0;color:#666;">
+          <li><a href="index.html">Trang Chủ</a></li>
+          <li><a href="categories.html">Danh Mục</a></li>
+          <li><a href="foods.html">Thực Đơn</a></li>
+          <li><a href="order_fixed.html">Giỏ Hàng</a></li>
+        </ul>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <h4 style="margin:0 0 8px;">Liên hệ</h4>
+        <p style="color:#666;margin:0;">Hotline: <strong>1900-1234</strong><br>Email: <a href="mailto:hello@thanf.vn">hello@thanf.vn</a></p>
+      </div>
+      <div style="flex:1;min-width:160px;">
+        <h4 style="margin:0 0 8px;">Kết nối</h4>
+        <p><a href="https://facebook.com" target="_blank"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png" alt="fb"></a> <a href="https://instagram.com" target="_blank"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png" alt="ig"></a></p>
+      </div>
+    </div>
+    <div style="text-align:center;color:#aaa;margin-top:12px;">© 2026 ThanhF — Bảo lưu mọi quyền.</div>
+  </footer>
+
+<script src="js/site.js"></script>
 
 </body>
 </html>
