@@ -8,26 +8,31 @@
 </head>
 <body>
 
-<!-- Navbar -->
-<section class="navbar">
-    <div class="container">
+<!-- Header (standardized) -->
+<header class="navbar" role="banner">
+    <div class="container" style="display:flex; align-items:center; gap:12px;">
         <div class="logo">
             <a href="index.html" title="ThanhF 1">
                 <img src="images/logo.png" class="img-responsive">
             </a>
         </div>
 
-        <div class="menu text-right">
+        <nav class="menu" role="navigation" aria-label="Main menu">
             <ul>
                 <li><a href="index.html">Trang Chủ</a></li>
                 <li><a href="categories.html">Danh Mục</a></li>
                 <li><a href="foods.html">Thực Đơn</a></li>
-                <li><a href="order.html">Đặt Hàng</a></li>
+                <li><a href="#" onclick="goToOrder(); return false;">Đặt Hàng</a></li>
             </ul>
+        </nav>
+
+        <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+            <a href="order_fixed.html" class="btn" title="Giỏ hàng">🛒 Giỏ (<span id="cart-count">0</span>)</a>
+            <div id="profile-menu" style="display:none;"><a href="profile.html">👤 Hồ Sơ</a></div>
+            <div id="auth-menu"><a href="#" class="btn btn-primary" onclick="openLoginModal(); return false;">🔐 Đăng Nhập</a></div>
         </div>
-        <div class="clearfix"></div>
     </div>
-</section>
+</header>
 
 <!-- Hero Section -->
 <section class="food-search text-center" style="padding: 3% 0; background: linear-gradient(135deg, #ff6b81 0%, #ff5c6a 100%); color: white;">
@@ -51,8 +56,6 @@
                         <th>📌 Tên Món</th>
                         <th>💰 Giá</th>
                         <th>📦 Số Lượng</th>
-                        <th>💵 Tổng Tiền</th>
-                        <th>⚙️</th>
                     </tr>
                 </thead>
                 <tbody id="cart-items">
@@ -69,6 +72,37 @@
                 <div class="order-summary-item">
                     <span>Tổng Tiền Hàng:</span>
                     <span id="subtotal">0 ₫</span>
+
+                <!-- Footer (standardized) -->
+                <footer class="site-footer">
+                    <div class="container" style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+                        <div style="flex:1;min-width:200px;">
+                            <a href="index.html"><img src="images/logo.png" alt="ThanhF" style="height:48px"></a>
+                            <p style="color:#777;margin-top:8px;">ThanhF — Đồ ăn nhanh giao tận nơi</p>
+                        </div>
+                        <div style="flex:1;min-width:160px;">
+                            <h4 style="margin:0 0 8px;">Liên kết</h4>
+                            <ul style="list-style:none;padding:0;margin:0;color:#666;">
+                                <li><a href="index.html">Trang Chủ</a></li>
+                                <li><a href="categories.html">Danh Mục</a></li>
+                                <li><a href="foods.html">Thực Đơn</a></li>
+                                <li><a href="order_fixed.html">Giỏ Hàng</a></li>
+                            </ul>
+                        </div>
+                        <div style="flex:1;min-width:200px;">
+                            <h4 style="margin:0 0 8px;">Liên hệ</h4>
+                            <p style="color:#666;margin:0;">Hotline: <strong>1900-1234</strong><br>Email: <a href="mailto:hello@thanf.vn">hello@thanf.vn</a></p>
+                        </div>
+                        <div style="flex:1;min-width:160px;">
+                            <h4 style="margin:0 0 8px;">Kết nối</h4>
+                            <p><a href="https://facebook.com" target="_blank"><img src="https://img.icons8.com/fluent/24/000000/facebook-new.png" alt="fb"></a> <a href="https://instagram.com" target="_blank"><img src="https://img.icons8.com/fluent/24/000000/instagram-new.png" alt="ig"></a></p>
+                        </div>
+                    </div>
+                    <div style="text-align:center;color:#aaa;margin-top:12px;">© 2026 ThanhF — Bảo lưu mọi quyền.</div>
+                </footer>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="order-summary-item">
                     <span>Phí Giao Hàng:</span>
@@ -119,63 +153,16 @@
                             💵 Thanh Toán Khi Nhận Hàng
                         </label>
                         <label>
-                            <input type="radio" name="payment_method" value="card" required onchange="togglePaymentMethod()">
-                            💳 Thanh Toán Qua Thẻ
+                            <input type="radio" name="payment_method" value="qr" required onchange="togglePaymentMethod()">
+                            📱 Thanh Toán Qua QR
                         </label>
                     </div>
                 </fieldset>
 
-                <!-- Credit Card Payment Section -->
+                <!-- QR Payment: card option replaced by QR. Card fields removed to prefer QR workflow. -->
                 <fieldset style="margin-top: 2%; display: none;" id="card-payment-section">
-                    <legend>💳 Thông Tin Thanh Toán Qua Thẻ</legend>
-                    
-                    <div class="order-form-row">
-                        <div class="order-form-col">
-                            <input type="text" name="card_holder" placeholder="👤 Tên Chủ Thẻ" maxlength="50">
-                        </div>
-                        <div class="order-form-col">
-                            <input type="text" name="card_number" placeholder="💳 Số Thẻ (16 chữ số)" maxlength="16" pattern="[0-9]{16}">
-                        </div>
-                    </div>
-
-                    <div class="order-form-row">
-                        <div class="order-form-col">
-                            <label style="display: block; margin-bottom: 0.5%;">Ngày Hết Hạn (MM/YY)</label>
-                            <input type="text" name="card_expiry" placeholder="MM/YY" maxlength="5" pattern="[0-9]{2}/[0-9]{2}">
-                        </div>
-                        <div class="order-form-col">
-                            <label style="display: block; margin-bottom: 0.5%;">CVV/CVC</label>
-                            <input type="text" name="card_cvv" placeholder="⚠️ CVV (3 chữ số)" maxlength="3" pattern="[0-9]{3}">
-                        </div>
-                    </div>
-
-                    <div class="order-form-row">
-                        <div class="order-form-col">
-                            <label style="display: block; margin-bottom: 0.5%;">Chọn Loại Thẻ</label>
-                            <select name="card_type" style="width: 100%; padding: 1%; border: 1px solid #ddd; border-radius: 3px; font-size: 1rem;">
-                                <option value="">-- Chọn Loại Thẻ --</option>
-                                <option value="visa">🔵 Visa</option>
-                                <option value="mastercard">🔴 Mastercard</option>
-                                <option value="amex">💚 American Express</option>
-                                <option value="domestic">🇻🇳 Thẻ Nội Địa</option>
-                            </select>
-                        </div>
-                        <div class="order-form-col">
-                            <label style="display: block; margin-bottom: 0.5%;">Loại Thẻ</label>
-                            <select name="card_account_type" style="width: 100%; padding: 1%; border: 1px solid #ddd; border-radius: 3px; font-size: 1rem;">
-                                <option value="">-- Chọn Loại --</option>
-                                <option value="debit">💰 Thẻ Ghi Nợ (Debit)</option>
-                                <option value="credit">📊 Thẻ Tín Dụng (Credit)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="order-form-row">
-                        <label style="display: flex; align-items: center;">
-                            <input type="checkbox" name="card_save" style="margin-right: 1%;">
-                            💾 Lưu Thông Tin Thẻ Cho Lần Mua Tiếp Theo
-                        </label>
-                    </div>
+                    <legend>📱 Thanh Toán QR (khác)</legend>
+                    <p style="color:#666;">Nếu bạn muốn sử dụng mã QR khác, quản trị viên có thể cấu hình mã QR merchant.</p>
                 </fieldset>
 
                 <button type="button" class="btn btn-primary" id="submitOrderBtn" style="margin-top: 2%; width: 100%; padding: 1.5%; font-size: 1.1rem;">✅ Đặt Hàng Ngay</button>
@@ -209,6 +196,10 @@
             <img id="qrImage" src="" alt="QR Code" style="width: 200px; height: 200px; margin: 1% 0;">
             <p style="color: #666; font-size: 0.9rem; margin-top: 1%;">Số tiền: <span id="qrAmount">0</span> ₫</p>
             <p style="color: #999; font-size: 0.85rem;">Sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã QR</p>
+            <div style="margin-top:12px; display:flex; gap:8px;">
+                <button id="confirmQRBtn" type="button" style="flex:1;padding:10px;border-radius:6px;border:none;background:linear-gradient(90deg,#ff6b81,#ff5c6a);color:#fff;font-weight:700;">✅ Tôi đã thanh toán</button>
+                <button id="cancelQRBtn" type="button" style="flex:1;padding:10px;border-radius:6px;border:none;background:#ddd;color:#333;">❌ Hủy</button>
+            </div>
         </div>
 
         <button type="button" id="closeModalBtn" style="width: 100%; padding: 1%; background: #ddd; color: #333; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; font-weight: bold;">
@@ -264,17 +255,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     document.getElementById('cardPaymentBtn').addEventListener('click', function() {
-        // Check if card details are filled when card payment is selected in form
-        let paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
-        
-        if (paymentMethod === 'card') {
-            if (!validateCardPayment()) {
-                return;
-            }
+        // Treat this button as QR payment (card -> qr). Open QR using merchant config if available.
+        const total = calculateTotal();
+        // Use merchant modal if available
+        if (typeof openMerchantQR === 'function') {
+            openMerchantQR(total, 'Sử dụng ứng dụng ngân hàng hoặc ví để quét mã QR');
+        } else {
+            showQRCode();
         }
-        
-        // Show QR code
-        showQRCode();
     });
     
     document.getElementById('closeModalBtn').addEventListener('click', function() {
@@ -286,6 +274,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.target === this) {
             closePaymentModal();
         }
+    });
+
+    // QR confirm/cancel handlers (inline section)
+    const confirmQRBtn = document.getElementById('confirmQRBtn');
+    const cancelQRBtn = document.getElementById('cancelQRBtn');
+    if (confirmQRBtn) confirmQRBtn.addEventListener('click', function(){
+        // treat as QR payment confirmed
+        completeOrder('qr');
+    });
+    if (cancelQRBtn) cancelQRBtn.addEventListener('click', function(){
+        document.getElementById('qrCodeSection').style.display = 'none';
     });
 });
 
@@ -307,13 +306,18 @@ function showQRCode() {
     const qrImage = document.getElementById('qrImage');
     const qrAmount = document.getElementById('qrAmount');
     
-    // Generate QR code using QR Server API
-    // Format: Amount | Reference | Store info
-    const qrData = `THANH TOÁN: ${total} VNĐ\nThanhF 1 Restaurant\nCảm ơn bạn!`;
-    const encodedData = encodeURIComponent(qrData);
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedData}`;
-    
-    qrImage.src = qrUrl;
+    // Prefer merchant QR if configured
+    let merchant = null;
+    try { merchant = localStorage.getItem('merchantQR'); } catch(e) { merchant = null; }
+    if (merchant) {
+        qrImage.src = merchant;
+    } else {
+        // Generate QR code using QR Server API
+        const qrData = `THANH TOÁN: ${total} VNĐ\nThanhF 1 Restaurant\nCảm ơn bạn!`;
+        const encodedData = encodeURIComponent(qrData);
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedData}`;
+        qrImage.src = qrUrl;
+    }
     qrAmount.textContent = total.toLocaleString('vi-VN');
     qrCodeSection.style.display = 'block';
 }
@@ -341,7 +345,7 @@ function completeOrder(paymentType) {
         customer_phone: document.querySelector('input[name="customer_phone"]').value,
         customer_address: document.querySelector('input[name="customer_address"]').value,
         order_notes: document.querySelector('textarea[name="order_notes"]').value,
-        payment_method: paymentType === 'card' ? 'card' : 'cash',
+        payment_method: paymentType === 'qr' ? 'qr' : (paymentType === 'card' ? 'card' : 'cash'),
         items: cart,
         total: calculateTotal(),
         order_date: new Date().toLocaleString('vi-VN')
@@ -570,6 +574,8 @@ function calculateTotal() {
     return total + (total > 500000 ? 0 : 30000);
 }
 </script>
+
+<script src="js/site.js"></script>
 
 </body>
 </html>
