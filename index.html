@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ThanhF 1 - Nhà Hàng Ăn Nhanh & Ẩm Thực Đẳng Cấp</title>
+    <title>Ăn Nhanh & Ẩm Thực Đẳng Cấp</title>
     <link rel="stylesheet" href="css/style.css">
 
     <style>
@@ -95,8 +95,7 @@
         text-align:center;
     ">
        <h2 style="color:#ff6b81">🍔 Chào mừng đến với ThanhF 1</h2>
-        <p> đặt đồ ăn nhanh – giao tận nơi.</p>
-        <p>dong cua luc 23h00 hang ngay</p>
+        <p>đặt đồ ăn nhanh – giao tận nơi.</p>
         <button type="button" class="btn btn-primary" onclick="acceptWelcome()">
     ✅ Tôi đã hiểu
 </button>
@@ -620,9 +619,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateUserProfile();
                 closeLoginModal();
                 loginForm.reset();
-                alert('✅ Đăng nhập thành công!');
+                showNotification('✅ Đăng nhập thành công!', 'success');
             } else {
-                alert('❌ Email hoặc mật khẩu không đúng!');
+                showNotification('❌ Email hoặc mật khẩu không đúng!', 'error');
             }
         });
     }
@@ -639,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let password2 = document.getElementById('regPassword2').value;
             
             if (password !== password2) {
-                alert('⚠️ Mật khẩu không khớp!');
+                showNotification('⚠️ Mật khẩu không khớp!', 'warning');
                 return;
             }
             
@@ -648,7 +647,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Check if email already exists
             if (accounts.find(acc => acc.email === email)) {
-                alert('❌ Email này đã được đăng ký rồi!');
+                showNotification('❌ Email này đã được đăng ký rồi!', 'error');
                 return;
             }
             
@@ -674,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateUserProfile();
             closeRegisterModal();
             registerForm.reset();
-            alert('✅ Đăng ký thành công! Bạn đã được tự động đăng nhập.');
+            showNotification('✅ Đăng ký thành công! Bạn đã được tự động đăng nhập.', 'success');
         });
     }
     
@@ -691,8 +690,10 @@ function updateUserProfile() {
         // Show user profile
         if (profileMenu) profileMenu.style.display = 'inline';
         if (authMenu) authMenu.style.display = 'none';
-        document.getElementById('user-name').textContent = user.name;
-        document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+        let userNameEl = document.getElementById('user-name');
+        if (userNameEl) userNameEl.textContent = user.name;
+        let userAvatarEl = document.getElementById('user-avatar');
+        if (userAvatarEl) userAvatarEl.textContent = user.name.charAt(0).toUpperCase();
     } else {
         // Show login/register buttons
         if (profileMenu) profileMenu.style.display = 'none';
